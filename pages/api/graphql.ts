@@ -17,4 +17,9 @@ export const config = {
   }
 };
 
+const users = [{ 'name': 'pp'}, { 'name': 'pep'}, { 'name': 'pap'}];
+db.sequelize.sync().then(() => {
+  db.user.bulkCreate(users, {returning: true});
+});
+
 export default apolloServer.createHandler({ path: "/api/graphql" });
