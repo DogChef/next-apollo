@@ -1,8 +1,19 @@
-import { gql } from 'apollo-server-micro';
+import { gql } from "apollo-server-micro";
 
 const typeDefs = gql`
+  type User {
+    id: ID!
+    name: String!
+  }
+
   type Query {
-    sayHello: String
+    getUsers: [User]!
+    getUser(id: ID!): User
+  }
+
+  type Mutation {
+    createUser(name: String!): User
+    updateUser(id: ID!, name: String!): User
   }
 `;
 
