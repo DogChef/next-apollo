@@ -1,10 +1,15 @@
 import { gql } from "apollo-server-micro";
 
 const typeDefs = gql`
+  scalar Date
+
   type User {
     id: ID!
-    name: String!
-    email: String!
+    name: String
+    email: String
+    password: String
+    createdAt: Date
+    updatedAt: Date
   }
 
   type Query {
@@ -13,7 +18,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    createUser(name: String!): User
+    createUser(name: String!, email: String!, password: String!): User
     updateUser(id: ID!, name: String!): User
   }
 `;

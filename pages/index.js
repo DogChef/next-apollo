@@ -11,6 +11,8 @@ const GET_USERS = gql`
     getUsers {
       id
       name
+      email
+      password
     }
   }
 `;
@@ -41,9 +43,21 @@ const Users = () => {
   if (error) return `Error! ${error.message}`;
 
   return (
-    <h2>
-      There are currently {data.getUsers.length} users registered in the system
-    </h2>
+    <>
+      <h2>
+        There are currently {data.getUsers.length} users registered in the
+        system.
+      </h2>
+      <h3>They are:</h3>
+      {data.getUsers.map(({ id, name, email, password }, index) => (
+        <ul key={index}>
+          <li>id: {id} </li>
+          <li>name: {name} </li>
+          <li>email: {email} </li>
+          <li>password: {password} </li>
+        </ul>
+      ))}
+    </>
   );
 };
 

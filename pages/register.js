@@ -24,9 +24,9 @@ const submition = (values, { setSubmitting }) => {
 };
 
 const fields = [
-  { name: "name", placeholder: "Enter your name", type: "text" },
-  { name: "email", placeholder: "Enter your email", type: "email" },
-  { name: "password", placeholder: "Enter a password", type: "password" },
+  { name: "name", placeholder: "Your name", type: "text" },
+  { name: "email", placeholder: "Your email address", type: "email" },
+  { name: "password", placeholder: "Choose a safe password", type: "password" },
   {
     name: "confirmPassword",
     placeholder: "Confirm your password",

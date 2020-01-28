@@ -5,9 +5,10 @@ import Sequelize from "sequelize";
 const sequelize = new Sequelize(
   "postgres://lotion:lotion@postgres:5432/lotion"
 );
-const db = {};
 
+const db = {};
 const route = `${process.cwd()}/pages/api/models`;
+
 fs.readdirSync(route)
   .filter(file => {
     return (
@@ -29,5 +30,6 @@ Object.keys(db).forEach(modelName => {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+db.sequelize.sync();
 
 export default db;
