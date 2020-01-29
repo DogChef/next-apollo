@@ -2,8 +2,10 @@ import fs from "fs";
 import path from "path";
 import Sequelize from "sequelize";
 
+const config = require(__dirname + "/../config.json")[process.env.NODE_ENV];
+
 const sequelize = new Sequelize(
-  "postgres://lotion:lotion@postgres:5432/lotion"
+  `postgres://${config.username}:${config.password}@postgres:5432/${config.database}`
 );
 
 const db = {};

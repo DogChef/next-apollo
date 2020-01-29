@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { withFormik, Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { styled } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+
+const StyledForm = styled(Form)`
+  width: 100%;
+`;
 
 const BasicForm = props => {
   const [firstInput, setFirstInput] = useState(null);
@@ -17,14 +23,15 @@ const BasicForm = props => {
       validateOnBlur={false}
     >
       {({ values, errors, touched }) => (
-        <Form>
-          {props.fields.map(({ name, placeholder, type }, index) => (
+        <StyledForm>
+          {props.fields.map(({ name, placeholder, type, component }, index) => (
             <React.Fragment key={index}>
               <label htmlFor={name}>{name.capitalize}</label>
               <Field
                 name={name}
                 placeholder={placeholder}
                 type={type}
+                component={component}
                 innerRef={input => {
                   index === 0 && setFirstInput(input);
                 }}
@@ -34,7 +41,7 @@ const BasicForm = props => {
             </React.Fragment>
           ))}
           <button type="submit">Submit</button>
-        </Form>
+        </StyledForm>
       )}
     </Formik>
   );

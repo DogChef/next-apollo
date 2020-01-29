@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define("user", {
+  return (User = sequelize.define("user", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -8,9 +8,27 @@ module.exports = (sequelize, DataTypes) => {
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
+      validate: {
+        len: {
+          args: [4, 12],
+          msg: "Name must be between 4 and 12 characters long."
+        }
+      }
+    },
+    email: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: false,
+      validate: {
+        isEmail: {
+          msg: "Email addres must be valid"
+        }
+      }
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false
     }
-  });
-
-  return User;
+  }));
 };
