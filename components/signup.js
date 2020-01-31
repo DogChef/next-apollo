@@ -78,7 +78,6 @@ const SignUp = props => {
         }
       )
       .catch(err => {
-        console.log(`Aca es el error: ${err}`);
         const error = err.graphQLErrors.map(x => x.message);
         setErrors({ email: error[0] });
       });
