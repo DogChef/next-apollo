@@ -1,13 +1,51 @@
+"use-strict";
+
+const bcrypt = require("bcrypt");
+
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define('user', {
+  return (User = sequelize.define(
+    "user",
+    {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
+        allowNull: false
       },
-      name: DataTypes.STRING
+      name: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        validate: {
+          len: {
+            args: [4, 12],
+            msg: "Name must be between 4 and 12 characters long."
+          }
+        }
+      },
+      email: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false,
+        validate: {
+          isEmail: {
+            msg: "Email addres must be valid"
+          }
+        }
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false
+      }
+    },
+    {
+      hooks: {
+        beforeCreate: (user, options) => {
+          {
+            user.password =
+              user.password != "" ? bcrypt.hashSync(user.password, 10) : "";
+          }
+        }
+      }
     }
-  );
-
-  return User;
-}
+  ));
+};
