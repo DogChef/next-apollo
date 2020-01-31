@@ -10,7 +10,6 @@ const GET_USERS = gql`
       id
       name
       email
-      password
     }
   }
 `;
@@ -31,12 +30,11 @@ const Users = () => {
       {data.getUsers.length > 0 && (
         <Typography component="h3">They are:</Typography>
       )}
-      {data.getUsers.map(({ id, name, email, password }, index) => (
+      {data.getUsers.map(({ id, name, email }, index) => (
         <ul key={index}>
           <li>id: {id} </li>
           <li>name: {name} </li>
           <li>email: {email} </li>
-          <li>password: {password} </li>
         </ul>
       ))}
     </>
