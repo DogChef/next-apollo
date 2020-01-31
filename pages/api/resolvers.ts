@@ -2,6 +2,9 @@ import { GraphQLScalarType } from "graphql";
 import { Kind } from "graphql/language";
 import { UserInputError } from "apollo-server-micro";
 
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
 const resolvers = {
   Date: new GraphQLScalarType({
     name: "Date",
@@ -26,8 +29,8 @@ const resolvers = {
   },
 
   Mutation: {
-    createUser: (parent, { name, email, password }, { db }) => {
-      return db.user
+    signUpUser: async (parent, { name, email, password }, { db }) => {
+      const newUser = db.user
         .create({
           name: name,
           email: email,
@@ -38,15 +41,24 @@ const resolvers = {
             "There's already an account with this email"
           );
         });
+
+      return { token: jwt.sign(newUser, "supersecret") };
     },
-    updateUser: (parent, { id, name, email }, { db }) =>
-      db.user.update(
-        {
-          name: name,
-          email: email
-        },
-        { where: { id: id } }
-      )
+    logInUser: (parent, { email, password }, { db }) => {
+      const [currentUser] = db.user
+        .findOne({ where: { email: email } })
+        .then(data => {
+          const isMatch = bcrypt.compareSync(password, currentUser.password);
+          if (isMatch) {
+            return { token: jwt.sign(currentUser, "supersecret") };
+          } else {
+            throw new UserInputError("que hacesss");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   }
 };
 
