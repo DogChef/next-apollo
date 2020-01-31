@@ -1,5 +1,6 @@
 import { GraphQLScalarType } from "graphql";
 import { Kind } from "graphql/language";
+import { UserInputError } from "apollo-server-micro";
 
 const resolvers = {
   Date: new GraphQLScalarType({
@@ -25,12 +26,19 @@ const resolvers = {
   },
 
   Mutation: {
-    createUser: (parent, { name, email, password }, { db }) =>
-      db.user.create({
-        name: name,
-        email: email,
-        password: password
-      }),
+    createUser: (parent, { name, email, password }, { db }) => {
+      return db.user
+        .create({
+          name: name,
+          email: email,
+          password: password
+        })
+        .catch(err => {
+          throw new UserInputError(
+            "There's already an account with this email"
+          );
+        });
+    },
     updateUser: (parent, { id, name, email }, { db }) =>
       db.user.update(
         {

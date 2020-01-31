@@ -1,6 +1,8 @@
 import App from "next/app";
 import Head from "next/head";
 import { withApollo } from "../lib/apollo";
+import { ThemeProvider } from "@material-ui/core/styles";
+import theme from "./_theme";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -8,7 +10,9 @@ function MyApp({ Component, pageProps }) {
       <Head>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Component {...pageProps} />
+      <ThemeProvider theme={theme}>
+        <Component {...pageProps} />
+      </ThemeProvider>
     </>
   );
 }
