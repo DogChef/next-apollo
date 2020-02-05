@@ -3,6 +3,7 @@ import Head from "next/head";
 import Cookies from "js-cookie";
 import Router from "next/router";
 import Users from "../components/users";
+import Layout from "../components/core/layout";
 
 const Home = () => {
   if (!Cookies.get("signedIn")) {
@@ -18,7 +19,9 @@ const Home = () => {
       </Head>
 
       <h1>Welcome!</h1>
-      <Users />
+      <Layout>
+        <Users />
+      </Layout>
     </div>
   );
 };
