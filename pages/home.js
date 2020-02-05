@@ -1,14 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Head from "next/head";
+import Cookies from "js-cookie";
+import Router from "next/router";
+import Users from "../components/users";
 
-const Home = () => (
-  <div>
-    <Head>
-      <title>Welcome to Lotion</title>
-    </Head>
+const Home = () => {
+  if (!Cookies.get("signedIn")) {
+    useEffect(() => {
+      Router.push("/");
+    });
+  }
 
-    <h1>Welcome!</h1>
-  </div>
-);
+  return (
+    <div>
+      <Head>
+        <title>Welcome to Lotion</title>
+      </Head>
+
+      <h1>Welcome!</h1>
+      <Users />
+    </div>
+  );
+};
 
 export default Home;

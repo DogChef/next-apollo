@@ -1,9 +1,34 @@
 import { GraphQLScalarType } from "graphql";
 import { Kind } from "graphql/language";
-import { UserInputError } from "apollo-server-micro";
+import { UserInputError, AuthenticationError } from "apollo-server-micro";
+import { decodedToken } from "./decodedToken";
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const secret = "supersecret";
+const util = require("util");
+
+const setTokens = ({ dataValues: { id, email } }) => {
+  const sevenDays = 60 * 60 * 24 * 7 * 1000;
+  const fifteenMins = 60 * 15 * 1000;
+  const accessUser = {
+    id: id
+  };
+
+  const accessToken = jwt.sign({ user: accessUser }, secret, {
+    expiresIn: fifteenMins
+  });
+
+  const refreshUser = {
+    id: id
+  };
+
+  const refreshToken = jwt.sign({ user: refreshUser }, secret, {
+    expiresIn: sevenDays
+  });
+
+  return { accessToken, refreshToken };
+};
 
 const resolvers = {
   Date: new GraphQLScalarType({
@@ -24,39 +49,65 @@ const resolvers = {
   }),
 
   Query: {
-    getUsers: (parent, args, { db }) => db.user.findAll(),
-    getUser: (parent, { id }, { db }) => db.user.findByPk(id)
+    getUsers: (parent, args, { dataSources: { db }, req, currentUser }) => {
+      /*const decoded = decodedToken(req, secret);*/
+      if (currentUser === undefined) {
+        throw new AuthenticationError("No user detected, please log in.");
+      }
+
+      return db.user.findAll();
+    },
+    getUser: (parent, { id }, { dataSources: { db } }) => db.user.findByPk(id)
   },
 
   Mutation: {
-    signUpUser: async (parent, { name, email, password }, { db }) => {
-      const newUser = db.user
+    signUpUser: (
+      parent,
+      { data: { name, email, password } },
+      { dataSources: { db }, res, setCookies }
+    ) => {
+      return db.user
         .create({
           name: name,
           email: email,
           password: password
+        })
+        .then(user => {
+          const tokens = setTokens(user);
+          res.setHeader("Set-Cookie", `token=${tokens.accessToken}; httpOnly`);
+          return user;
         })
         .catch(err => {
           throw new UserInputError(
             "There's already an account with this email"
           );
         });
-
-      return { token: jwt.sign(newUser, "supersecret") };
     },
-    logInUser: (parent, { email, password }, { db }) => {
-      const [currentUser] = db.user
+    logInUser: (
+      parent,
+      { data: { email, password } },
+      { dataSources: { db }, res, setCookies }
+    ) => {
+      return db.user
         .findOne({ where: { email: email } })
-        .then(data => {
-          const isMatch = bcrypt.compareSync(password, currentUser.password);
-          if (isMatch) {
-            return { token: jwt.sign(currentUser, "supersecret") };
+        .then(user => {
+          if (user) {
+            const isMatch = bcrypt.compareSync(password, user.password);
+            if (isMatch) {
+              const tokens = setTokens(user);
+              res.setHeader("Set-Cookie", `token=${tokens.accessToken}; httpOnly`);
+              return user;
+            } else {
+              throw null;
+            }
           } else {
-            throw new UserInputError("que hacesss");
+            throw null;
           }
         })
         .catch(err => {
-          console.log(err);
+          return new UserInputError(
+            "The email and password you entered did not match our records. Please double-check and try again."
+          );
         });
     }
   }

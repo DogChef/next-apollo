@@ -5,6 +5,7 @@ import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import Cookies from "js-cookie";
 import Router from "next/router";
 import {
   Box,
@@ -19,7 +20,7 @@ import {
 
 const CREATE_USER = gql`
   mutation signup($name: String, $email: String!, $password: String!) {
-    createUser(name: $name, email: $email, password: $password) {
+    signUpUser(data: { name: $name, email: $email, password: $password }) {
       id
     }
   }
@@ -40,8 +41,8 @@ const signupSchema = Yup.object().shape({
 });
 
 const SignUp = props => {
-  const [createUser, { data }] = useMutation(CREATE_USER);
   const theme = useTheme();
+  const [signUpUser, { data }] = useMutation(CREATE_USER);
 
   const StyledButton = matStyled(Button)({
     margin: theme.spacing(3, 0, 2)
@@ -57,7 +58,7 @@ const SignUp = props => {
   });
 
   const submition = (values, { setSubmitting, setErrors }) => {
-    createUser({
+    signUpUser({
       variables: {
         name: values.fname,
         email: values.email,
@@ -67,18 +68,17 @@ const SignUp = props => {
       .then(
         ({
           data: {
-            createUser: { id }
+            signUpUser: { id }
           }
         }) => {
-          setSubmitting(false);
           if (id) {
-            // Add user to context
+            Cookies.set("signedIn", true);
             Router.push("/home");
           }
         }
       )
       .catch(err => {
-        const error = err.graphQLErrors.map(x => x.message);
+        const error = err?.graphQLErrors?.map(x => x?.message);
         setErrors({ email: error[0] });
       });
   };
@@ -159,6 +159,7 @@ const SignUp = props => {
                   placeholder={"Enter a Password"}
                   variant="outlined"
                   margin="normal"
+                  autoComplete="new-password"
                   value={password}
                   onBlur={handleBlur}
                   onChange={handleChange}

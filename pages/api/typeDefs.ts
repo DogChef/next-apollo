@@ -12,16 +12,17 @@ const typeDefs = gql`
   }
 
   type AuthPayLoad {
-    token: String!
+    accessToken: String!
+    refreshToken: String!
   }
 
-  type UserLoginInput {
+  input UserLoginInput {
     email: String!
     password: String!
   }
 
-  type UserCreateInput {
-    name: String!
+  input UserCreateInput {
+    name: String
     email: String!
     password: String!
   }
@@ -32,8 +33,8 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    logInUser(data: UserLoginInput!): AuthPayLoad!
-    signUpUser(data: UserCreateInput!): AuthPayLoad!
+    logInUser(data: UserLoginInput!): User
+    signUpUser(data: UserCreateInput!): User
   }
 `;
 
