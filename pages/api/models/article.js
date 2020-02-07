@@ -1,7 +1,9 @@
 "use-strict";
 
 module.exports = (sequelize, DataTypes) => {
-  const Article = sequelize.define("article", {
+  const Article = sequelize.define(
+    "article",
+    {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -10,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       title: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       body: {
         type: DataTypes.STRING,
@@ -20,17 +22,22 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'users',
-          key: 'id'
+          model: "users",
+          key: "id"
         }
       },
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE
-    },{});
+    },
+    {}
+  );
 
   Article.associate = function(models) {
-    Article.belongsTo(models.user, {foreignKey: 'authorId', as: 'author'})
-    Article.belongsToMany(models.tag, {through: 'articleTags', foreignKey: 'articleId'})
+    Article.belongsTo(models.user, { foreignKey: "authorId", as: "author" });
+    Article.belongsToMany(models.tag, {
+      through: "articleTags",
+      foreignKey: "articleId"
+    });
   };
 
   return Article;

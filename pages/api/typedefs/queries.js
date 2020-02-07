@@ -18,4 +18,4 @@ const Queries = `
   }
 `;
 
-export default Queries
+export default Queries;

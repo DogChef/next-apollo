@@ -73,7 +73,7 @@ const SignUp = props => {
         }) => {
           if (id) {
             Cookies.set("signedIn", true);
-            Router.push("/home");
+            Router.push("/users");
           }
         }
       )

@@ -67,7 +67,7 @@ const Login = props => {
           Cookies.set("signedIn", "true");
 
           if (id) {
-            Router.push("/home");
+            Router.push("/users");
           }
         }
       )
@@ -114,7 +114,7 @@ const Login = props => {
               component={TextField}
               error={touched["email"] && errors["email"]?.length > 0}
               helperText={
-                touched["email"] && errors["email"] !== " " && errors["email"] 
+                touched["email"] && errors["email"] !== " " && errors["email"]
               }
               autoFocus
               fullWidth

@@ -1,40 +1,52 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import Head from "next/head";
+import Link from "next/link";
 import { styled as matStyled, useTheme } from "@material-ui/core/styles";
-import { Box, Drawer, CssBaseline, AppBar, Toolbar, List, Typography, ListItem, ListItemIcon, ListItemText, Divider } from "@material-ui/core";
-import { Inbox as InboxIcon, Mail as MailIcon, SupervisedUserCircle as UserIcon,
-  ChromeReaderMode as ViewIcon, Create as CreateIcon, PermIdentity as ProfileIcon } from "@material-ui/icons";
-import styled from 'styled-components'
+import {
+  AppBar,
+  Box,
+  CssBaseline,
+  Divider,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+  Typography
+} from "@material-ui/core";
+
+import {
+  SupervisedUserCircle as UserIcon,
+  ChromeReaderMode as ViewIcon,
+  Create as CreateIcon,
+  PermIdentity as ProfileIcon
+} from "@material-ui/icons";
+
+import styled from "styled-components";
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles(theme => ({
-  root: {
+const Layout = props => {
+  const theme = useTheme();
+
+  const FlexBox = matStyled(Box)({
     display: "flex"
-  },
-  appBar: {
+  });
+
+  const StyledAppBar = matStyled(AppBar)({
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: drawerWidth
-  },
-  drawer: {
+  });
+
+  const StyledDrawer = matStyled(Drawer)({
     width: drawerWidth,
     flexShrink: 0
-  },
-  drawerPaper: {
-    width: drawerWidth
-  },
-  toolbar: theme.mixins.toolbar,
-  content: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.default,
-    padding: theme.spacing(3)
-  }
-}));
+  });
 
-const Layout = (props) => {
-  //const theme = useTheme();
-  //const [logInUser, { data }] = useMutation(LOG_IN);
-  const classes = useStyles();
+  const StyledList = matStyled(List)({
+    width: drawerWidth
+  });
 
   const StyledImg = styled.img`
     width: 134px;
@@ -43,63 +55,89 @@ const Layout = (props) => {
     padding: 8px;
   `;
 
-  return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
-          <Typography variant="h6" noWrap>
-            Are we going to have a header?
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        className={classes.drawer}
-        variant="permanent"
-        classes={{
-          paper: classes.drawerPaper
-        }}
-        anchor="left"
+  const StyledMain = styled.main`
+    flex-grow: 1;
+    background-color: ${theme.palette.background.default};
+    padding: ${theme.spacing(3)}px;
+    margin-top: ${theme.spacing(8)}px;
+  `;
+
+  const [selected, setSelected] = React.useState(props.selected);
+
+  const StyledListItem = matStyled(ListItem)({
+    "&.Mui-selected .MuiListItemText-primary": {
+      fontWeight: 600,
+      color: `${theme.palette.primary.dark}`
+    },
+
+    "&.Mui-selected .MuiListItemIcon-root": {
+      color: `${theme.palette.primary.dark} !important`
+    }
+  });
+
+  const ListItemLink = localProps => (
+    <Link href={localProps.url} passHref>
+      <StyledListItem
+        button
+        selected={localProps.selector === selected}
+        onClick={() => setSelected(localProps.selector)}
       >
-        <StyledImg src="/logo.png"/>
-        
-        <Divider />
-        <List>
-          <ListItem button key={"Profile"}>
-            <ListItemIcon>
-              <ProfileIcon/>
-            </ListItemIcon>
-            <ListItemText primary={"Profile"} />
-          </ListItem>
-          <ListItem button key={"Users"}>
-            <ListItemIcon>
-              <UserIcon/>
-            </ListItemIcon>
-            <ListItemText primary={"Users"} />
-          </ListItem>
-        </List>
-        <Divider />
-        <List>
-          <ListItem button key={"Create Article"}>
-            <ListItemIcon>
-              <CreateIcon/>
-            </ListItemIcon>
-            <ListItemText primary={"Create article"} />
-          </ListItem>
-          <ListItem button key={"View article"}>
-            <ListItemIcon>
-              <ViewIcon/>
-            </ListItemIcon>
-            <ListItemText primary={"View article"} />
-          </ListItem>
-        </List>
-        <Divider />
-      </Drawer>
-      <main className={classes.content}>
-        {props.children}
-      </main>
-    </div>
+        <ListItemIcon>{localProps.children}</ListItemIcon>
+        <ListItemText primary={localProps.text} />
+      </StyledListItem>
+    </Link>
   );
-}
+
+  return (
+    <>
+      <Head>
+        <title>{props.title}</title>
+      </Head>
+
+      <FlexBox>
+        <CssBaseline />
+        <StyledAppBar position="fixed">
+          <Toolbar>
+            <Typography variant="h6" noWrap>
+              Are we going to have a header?
+            </Typography>
+          </Toolbar>
+        </StyledAppBar>
+        <StyledDrawer variant="permanent" anchor="left">
+          <StyledImg src="/logo.png" />
+
+          <Divider />
+          <StyledList>
+            <ListItemLink url="/profile" text="Profile" selector="profile">
+              <ProfileIcon />
+            </ListItemLink>
+            <ListItemLink url="/users" text="Users" selector="users">
+              <UserIcon />
+            </ListItemLink>
+          </StyledList>
+          <Divider />
+          <StyledList>
+            <ListItemLink
+              url="/new_article"
+              text="Create Article"
+              selector="create_article"
+            >
+              <CreateIcon />
+            </ListItemLink>
+            <ListItemLink
+              url="/articles"
+              text="View articles"
+              selector="view_articles"
+            >
+              <ViewIcon />
+            </ListItemLink>
+          </StyledList>
+          <Divider />
+        </StyledDrawer>
+        <StyledMain>{props.children}</StyledMain>
+      </FlexBox>
+    </>
+  );
+};
 
 export default Layout;

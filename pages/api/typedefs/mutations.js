@@ -10,4 +10,4 @@ const Mutations = `
   }
 `;
 
-export default Mutations
+export default Mutations;

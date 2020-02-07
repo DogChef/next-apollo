@@ -11,7 +11,7 @@ import {
   Box,
   CssBaseline,
   Grid,
-  Link as MLink,
+  Link,
   Paper,
   Typography
 } from "@material-ui/core";
@@ -21,9 +21,9 @@ const Copyright = () => {
     <Box mt={5}>
       <Typography variant="body2" color="textSecondary" align="center">
         {"Copyright © "}
-        <MLink href="https://lithiumsoft.com/es/inicio/">
+        <Link href="https://lithiumsoft.com/es/inicio/">
           Lithium Software
-        </MLink>{" "}
+        </Link>{" "}
         {new Date().getFullYear()}
         {"."}
       </Typography>
@@ -37,7 +37,7 @@ const Index = () => {
 
   if (Cookies.get("signedIn")) {
     useEffect(() => {
-      Router.push("/home");
+      Router.push("/users");
     });
   }
 
@@ -65,7 +65,6 @@ const Index = () => {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main
   });
-
 
   return (
     <>

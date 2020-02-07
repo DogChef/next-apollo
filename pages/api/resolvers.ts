@@ -58,20 +58,19 @@ const resolvers = {
       return db.user.findAll();
     },
 
-    getArticle: (parent, { id }, { dataSources: { db } }) => db.article.findByPk(id),
-    getArticles: (parent, args, { dataSources: { db } }) => db.article.findAll(),
+    getArticle: (parent, { id }, { dataSources: { db } }) =>
+      db.article.findByPk(id),
+    getArticles: (parent, args, { dataSources: { db } }) =>
+      db.article.findAll(),
 
     getTag: (parent, { id }, { dataSources: { db } }) => db.tag.findByPk(id),
-    getTags: (parent, args, { dataSources: { db } }) => db.tag.findAll(),
+    getTags: (parent, args, { dataSources: { db } }) => db.tag.findAll()
   },
 
   Mutation: {
-    signUpUser: (
-      parent,
-      { userInput },
-      { dataSources: { db }, res }
-    ) => {
-      return db.user.create(userInput)
+    signUpUser: (parent, { userInput }, { dataSources: { db }, res }) => {
+      return db.user
+        .create(userInput)
         .then(user => {
           const tokens = setTokens(user);
           res.setHeader("Set-Cookie", `token=${tokens.accessToken}; httpOnly`);
@@ -81,20 +80,23 @@ const resolvers = {
           throw new UserInputError(
             "There's already an account with this email"
           );
-        })
+        });
     },
     logInUser: (
       parent,
       { userInput: { email, password } },
       { dataSources: { db }, res }
-    ) => (
+    ) =>
       db.user
         .findOne({ where: { email: email } })
         .then(user => {
           if (user) {
             if (bcrypt.compareSync(password, user.password)) {
               const tokens = setTokens(user);
-              res.setHeader("Set-Cookie", `token=${tokens.accessToken}; httpOnly`);
+              res.setHeader(
+                "Set-Cookie",
+                `token=${tokens.accessToken}; httpOnly`
+              );
               return user;
             } else {
               throw null;
@@ -107,15 +109,9 @@ const resolvers = {
           return new UserInputError(
             "The email and password you entered did not match our records. Please double-check and try again."
           );
-        })
-    ),
-    createArticle: (
-      parent,
-      { articleInput },
-      { dataSources: { db }}
-    ) => (
+        }),
+    createArticle: (parent, { articleInput }, { dataSources: { db } }) =>
       db.article.create(articleInput)
-    )
   },
   User: {
     articles: user => user.getArticles()
