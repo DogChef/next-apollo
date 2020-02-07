@@ -20,7 +20,7 @@ import {
 
 const CREATE_USER = gql`
   mutation signup($name: String, $email: String!, $password: String!) {
-    signUpUser(data: { name: $name, email: $email, password: $password }) {
+    signUpUser(userInput: { name: $name, email: $email, password: $password }) {
       id
     }
   }

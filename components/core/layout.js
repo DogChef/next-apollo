@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Sidebar = (props) => {
+const Layout = (props) => {
   //const theme = useTheme();
   //const [logInUser, { data }] = useMutation(LOG_IN);
   const classes = useStyles();
@@ -102,4 +102,4 @@ const Sidebar = (props) => {
   );
 }
 
-export default Sidebar;
+export default Layout;

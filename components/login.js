@@ -21,7 +21,7 @@ import {
 
 const LOG_IN = gql`
   mutation login($email: String!, $password: String!) {
-    logInUser(data: { email: $email, password: $password }) {
+    logInUser(userInput: { email: $email, password: $password }) {
       id
     }
   }
@@ -114,7 +114,7 @@ const Login = props => {
               component={TextField}
               error={touched["email"] && errors["email"]?.length > 0}
               helperText={
-                touched["email"] && errors["email"] && errors["email"] !== " "
+                touched["email"] && errors["email"] !== " " && errors["email"] 
               }
               autoFocus
               fullWidth
