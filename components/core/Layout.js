@@ -1,6 +1,8 @@
 import React from "react";
 import Head from "next/head";
 import Link from "next/link";
+import CAM from "../CreateArticleModal";
+import styled from "styled-components";
 import { styled as matStyled, useTheme } from "@material-ui/core/styles";
 import {
   AppBar,
@@ -22,8 +24,6 @@ import {
   Create as CreateIcon,
   PermIdentity as ProfileIcon
 } from "@material-ui/icons";
-
-import styled from "styled-components";
 
 const drawerWidth = 240;
 
@@ -75,18 +75,30 @@ const Layout = props => {
     }
   });
 
-  const ListItemLink = localProps => (
-    <Link href={localProps.url} passHref>
-      <StyledListItem
-        button
-        selected={localProps.selector === selected}
-        onClick={() => setSelected(localProps.selector)}
-      >
-        <ListItemIcon>{localProps.children}</ListItemIcon>
-        <ListItemText primary={localProps.text} />
-      </StyledListItem>
-    </Link>
-  );
+  const ListItemLink = localProps => {
+    return (
+      <Link href={localProps.url} passHref>
+        <StyledListItem
+          button
+          selected={localProps.selector === selected}
+          onClick={localProps.onClick || setSelected(localProps.selector)}
+        >
+          <ListItemIcon>{localProps.children}</ListItemIcon>
+          <ListItemText primary={localProps.text} />
+        </StyledListItem>
+      </Link>
+    );
+  };
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <>
@@ -118,12 +130,14 @@ const Layout = props => {
           <Divider />
           <StyledList>
             <ListItemLink
-              url="/new_article"
+              url=""
               text="Create Article"
               selector="create_article"
+              onClick={handleOpen}
             >
               <CreateIcon />
             </ListItemLink>
+            <CAM open={open} handleClose={handleClose} />
             <ListItemLink
               url="/articles"
               text="View articles"

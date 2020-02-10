@@ -22,13 +22,13 @@ const Users = () => {
 
   return (
     <>
-      <Typography component="h1" variant="h4">
+      <Typography variant="h4">
         There are currently {data.getUsers.length} users registered in the
         system.
       </Typography>
 
       {data.getUsers.length > 0 && (
-        <Typography component="h3">They are:</Typography>
+        <Typography variant="h5">They are:</Typography>
       )}
       {data.getUsers.map(({ id, name, email }, index) => (
         <ul key={index}>

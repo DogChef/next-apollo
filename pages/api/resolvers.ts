@@ -68,8 +68,8 @@ const resolvers = {
   },
 
   Mutation: {
-    signUpUser: (parent, { userInput }, { dataSources: { db }, res }) => {
-      return db.user
+    signUpUser: (parent, { userInput }, { dataSources: { db }, res }) =>
+      db.user
         .create(userInput)
         .then(user => {
           const tokens = setTokens(user);
@@ -80,8 +80,7 @@ const resolvers = {
           throw new UserInputError(
             "There's already an account with this email"
           );
-        });
-    },
+        }),
     logInUser: (
       parent,
       { userInput: { email, password } },
@@ -110,8 +109,10 @@ const resolvers = {
             "The email and password you entered did not match our records. Please double-check and try again."
           );
         }),
-    createArticle: (parent, { articleInput }, { dataSources: { db } }) =>
-      db.article.create(articleInput)
+    createArticle: (parent, { articleInput }, { dataSources: { db } }) => {
+      articleInput.authorId = "1";
+      return db.article.create(articleInput);
+    }
   },
   User: {
     articles: user => user.getArticles()

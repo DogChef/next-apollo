@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import { styled as matStyled, useTheme } from "@material-ui/core/styles";
-import Login from "../components/login";
-import SignUp from "../components/signup";
+import Login from "../components/Login";
+import SignUp from "../components/SignUp";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Cookies from "js-cookie";
 import Router from "next/router";

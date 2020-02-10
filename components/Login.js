@@ -104,7 +104,7 @@ const Login = props => {
               id="email"
               type="email"
               label="Email Address"
-              placeholder={"Enter your email"}
+              placeholder="Enter your email"
               variant="outlined"
               margin="normal"
               autoComplete="email"
@@ -123,7 +123,7 @@ const Login = props => {
               id="password"
               type="password"
               label="Password"
-              placeholder={"Enter your Password"}
+              placeholder="Enter your Password"
               variant="outlined"
               margin="normal"
               value={password}

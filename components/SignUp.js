@@ -119,7 +119,7 @@ const SignUp = props => {
                 <Field
                   id="fname"
                   label="Name"
-                  placeholder={"Enter your name"}
+                  placeholder="Enter your name"
                   variant="outlined"
                   margin="normal"
                   value={fname}
@@ -137,7 +137,7 @@ const SignUp = props => {
                   id="email"
                   type="email"
                   label="Email Address"
-                  placeholder={"Enter your email"}
+                  placeholder="Enter your email"
                   variant="outlined"
                   margin="normal"
                   autoComplete="email"
@@ -156,7 +156,7 @@ const SignUp = props => {
                   id="password"
                   type="password"
                   label="Password"
-                  placeholder={"Enter a Password"}
+                  placeholder="Enter a Password"
                   variant="outlined"
                   margin="normal"
                   autoComplete="new-password"
@@ -175,7 +175,7 @@ const SignUp = props => {
                   id="passwordConfirmation"
                   type="password"
                   label="Password Confirmation"
-                  placeholder={"Confirm your password"}
+                  placeholder="Confirm your password"
                   variant="outlined"
                   margin="normal"
                   value={passwordConfirmation}
