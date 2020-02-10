@@ -142,6 +142,7 @@ const Layout = props => {
               url="/articles"
               text="View articles"
               selector="view_articles"
+              onClick="undefined"
             >
               <ViewIcon />
             </ListItemLink>

@@ -3,14 +3,9 @@ import Cookies from "js-cookie";
 import Router from "next/router";
 import UsersComponent from "../components/Users";
 import Layout from "../components/core/Layout";
+import withAuth from "../lib/withAuth";
 
 const Users = () => {
-  if (!Cookies.get("signedIn")) {
-    useEffect(() => {
-      Router.push("/");
-    });
-  }
-
   return (
     <Layout title="Welcome to Lotion" selected="users">
       <UsersComponent />
@@ -18,4 +13,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default withAuth({})(Users);

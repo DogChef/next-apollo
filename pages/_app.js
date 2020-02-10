@@ -5,7 +5,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "./_theme";
 import Cookies from "js-cookie";
 
-function MyApp({ Component, pageProps }) {
+const MyApp = ({ Component, pageProps }) => {
   if (Cookies.get("signedin")) {
     navigate("/users");
   }
@@ -20,6 +20,14 @@ function MyApp({ Component, pageProps }) {
       </ThemeProvider>
     </>
   );
-}
+};
+
+MyApp.getInitialProps = async ({ Component, ctx }) => {
+  let pageProps = {};
+  if (Component.getInitialProps) {
+    pageProps = await Component.getInitialProps(ctx);
+  }
+  return { pageProps };
+};
 
 export default withApollo(MyApp);

@@ -48,13 +48,9 @@ const resolvers = {
   }),
 
   Query: {
+    verifyUser: (parent, args, { currentUser }) => currentUser,
     getUser: (parent, { id }, { dataSources: { db } }) => db.user.findByPk(id),
-    getUsers: (parent, args, { dataSources: { db }, req, currentUser }) => {
-      /*const decoded = decodedToken(req, secret);*/
-      if (currentUser === undefined) {
-        throw new AuthenticationError("No user detected, please log in.");
-      }
-
+    getUsers: (parent, args, { dataSources: { db }, currentUser }) => {
       return db.user.findAll();
     },
 
@@ -73,7 +69,10 @@ const resolvers = {
         .create(userInput)
         .then(user => {
           const tokens = setTokens(user);
-          res.setHeader("Set-Cookie", `token=${tokens.accessToken}; httpOnly`);
+          res.setHeader(
+            "Set-Cookie",
+            `token=${tokens.accessToken}; secure; httpOnly`
+          );
           return user;
         })
         .catch(err => {
@@ -94,7 +93,7 @@ const resolvers = {
               const tokens = setTokens(user);
               res.setHeader(
                 "Set-Cookie",
-                `token=${tokens.accessToken}; httpOnly`
+                `token=${tokens.accessToken}; secure; httpOnly`
               );
               return user;
             } else {
