@@ -10,12 +10,14 @@ const apolloServer = new ApolloServer({
   dataSources: () => ({ db: db }),
   context: async ({ req, res }) => {
     const token = req?.cookies?.token || "";
-    const user = await (token ? jwt.verify(token, "supersecret") : undefined);
+    const { user } = await (token
+      ? jwt.verify(token, "supersecret")
+      : undefined);
 
     return {
       req,
       res,
-      currentUser: user
+      currentUserId: user.id
     };
   },
   introspection: true,
