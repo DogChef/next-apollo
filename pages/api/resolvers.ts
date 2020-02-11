@@ -56,12 +56,12 @@ const resolvers = {
   }),
 
   Query: {
-    verifyUser: (parent, args, { currentUserId }) =>
+    verifyUser: (parent, args, { dataSources: { db }, currentUserId }) =>
       db.user.findByPk(currentUserId),
     getUser: (parent, { id }, { dataSources: { db } }) => db.user.findByPk(id),
-    getUsers: (parent, args, { dataSources: { db }, currentUser }) => {
-      return db.user.findAll();
-    },
+    getUsers: authenticated(
+      (parent, args, { dataSources: { db }, currentUser }) => db.user.findAll()
+    ),
 
     getArticle: (parent, { id }, { dataSources: { db } }) =>
       db.article.findByPk(id),

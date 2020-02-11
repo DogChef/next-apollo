@@ -9,16 +9,23 @@ const apolloServer = new ApolloServer({
   resolvers,
   dataSources: () => ({ db: db }),
   context: async ({ req, res }) => {
-    const token = req?.cookies?.token || "";
-    const { user } = await (token
-      ? jwt.verify(token, "supersecret")
-      : undefined);
+    try {
+      const token = req?.cookies?.token || "";
+      const maliciousToken = req?.headers["malicious-token"];
 
-    return {
-      req,
-      res,
-      currentUserId: user.id
-    };
+      if (token === maliciousToken) throw null;
+      const { user } = await (token
+        ? jwt.verify(token, "supersecret")
+        : undefined);
+
+      return {
+        req,
+        res,
+        currentUserId: user?.id
+      };
+    } catch (err) {
+      return { req, res };
+    }
   },
   introspection: true,
   playground: true,
