@@ -11,14 +11,30 @@ const typeDefs = gql`
     updatedAt: Date
   }
 
+  type AuthPayLoad {
+    accessToken: String!
+    refreshToken: String!
+  }
+
+  input UserLoginInput {
+    email: String!
+    password: String!
+  }
+
+  input UserCreateInput {
+    name: String
+    email: String!
+    password: String!
+  }
+
   type Query {
     getUsers: [User]!
     getUser(id: ID!): User
   }
 
   type Mutation {
-    createUser(name: String, email: String!, password: String!): User
-    updateUser(id: ID!, name: String!): User
+    logInUser(data: UserLoginInput!): User
+    signUpUser(data: UserCreateInput!): User
   }
 `;
 

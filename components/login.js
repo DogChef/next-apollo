@@ -1,7 +1,11 @@
 import React from "react";
 import Link from "next/link";
+import { useMutation } from "@apollo/react-hooks";
+import gql from "graphql-tag";
 import * as Yup from "yup";
 import { Formik, Form, Field } from "formik";
+import Cookies from "js-cookie";
+import Router from "next/router";
 import {
   Box,
   Button,
@@ -15,6 +19,14 @@ import {
   useTheme
 } from "@material-ui/core";
 
+const LOG_IN = gql`
+  mutation login($email: String!, $password: String!) {
+    logInUser(data: { email: $email, password: $password }) {
+      id
+    }
+  }
+`;
+
 const loginSchema = Yup.object().shape({
   email: Yup.string()
     .email("Please enter a valid email")
@@ -22,15 +34,9 @@ const loginSchema = Yup.object().shape({
   password: Yup.string().required("Required")
 });
 
-const submition = (values, { setSubmitting }) => {
-  setTimeout(() => {
-    alert(`There's no login method!. ${JSON.stringify(values, null, 5)}`);
-    setSubmitting(false);
-  }, 400);
-};
-
 const Login = props => {
   const theme = useTheme();
+  const [logInUser, { data }] = useMutation(LOG_IN);
 
   const RightLabel = matStyled(FormControlLabel)({
     float: "right"
@@ -44,6 +50,32 @@ const Login = props => {
     width: "100%",
     marginTop: theme.spacing(1)
   });
+
+  const submition = (values, { setSubmitting, setErrors }) => {
+    logInUser({
+      variables: {
+        email: values.email,
+        password: values.password
+      }
+    })
+      .then(
+        ({
+          data: {
+            logInUser: { id }
+          }
+        }) => {
+          Cookies.set("signedIn", "true");
+
+          if (id) {
+            Router.push("/home");
+          }
+        }
+      )
+      .catch(err => {
+        const error = err.graphQLErrors.map(x => x.message);
+        setErrors({ email: " ", password: error[0] });
+      });
+  };
 
   return (
     <>
@@ -81,7 +113,9 @@ const Login = props => {
               onChange={handleChange}
               component={TextField}
               error={touched["email"] && errors["email"]?.length > 0}
-              helperText={touched["email"] && errors["email"]}
+              helperText={
+                touched["email"] && errors["email"] && errors["email"] !== " "
+              }
               autoFocus
               fullWidth
             />

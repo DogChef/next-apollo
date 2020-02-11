@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import { styled as matStyled, useTheme } from "@material-ui/core/styles";
 import Login from "../components/login";
 import SignUp from "../components/signup";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Cookies from "js-cookie";
+import Router from "next/router";
 import {
   Avatar,
   Box,
@@ -33,6 +35,12 @@ const Index = () => {
   const theme = useTheme();
   const [isLogin, changeComponent] = useState(true);
 
+  if (Cookies.get("signedIn")) {
+    useEffect(() => {
+      Router.push("/home");
+    });
+  }
+
   const RootGrid = matStyled(Grid)({
     display: "flex",
     height: "100vh"
@@ -57,6 +65,7 @@ const Index = () => {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main
   });
+
 
   return (
     <>
