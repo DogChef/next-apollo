@@ -39,6 +39,8 @@ const Index = () => {
     useEffect(() => {
       Router.push("/users");
     });
+
+    return null;
   }
 
   const RootGrid = matStyled(Grid)({
