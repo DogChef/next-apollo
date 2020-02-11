@@ -126,6 +126,7 @@ const Login = props => {
               placeholder="Enter your Password"
               variant="outlined"
               margin="normal"
+              autoComplete="current-password"
               value={password}
               onBlur={handleBlur}
               onChange={handleChange}

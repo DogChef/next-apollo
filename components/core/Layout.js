@@ -1,19 +1,19 @@
 import React from "react";
 import Head from "next/head";
-import Link from "next/link";
-import CAM from "../CreateArticleModal";
+import ArtMod from "../CreateArticleModal";
+import MyArticles from "../MyArticles";
+import SideBarItem from "./SideBarItem";
+import { logout } from "../../lib/useAuth";
 import styled from "styled-components";
 import { styled as matStyled, useTheme } from "@material-ui/core/styles";
 import {
   AppBar,
+  Button,
   Box,
   CssBaseline,
   Divider,
   Drawer,
   List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   Toolbar,
   Typography
 } from "@material-ui/core";
@@ -31,20 +31,16 @@ const Layout = props => {
   const theme = useTheme();
 
   const FlexBox = matStyled(Box)({
-    display: "flex"
+    display: "flex",
+    flexGrow: 1
   });
 
   const StyledAppBar = matStyled(AppBar)({
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth
+    width: "100%",
+    zIndex: theme.zIndex.drawer + 1
   });
 
-  const StyledDrawer = matStyled(Drawer)({
-    width: drawerWidth,
-    flexShrink: 0
-  });
-
-  const StyledList = matStyled(List)({
+  const ImageContainer = matStyled(Box)({
     width: drawerWidth
   });
 
@@ -55,6 +51,27 @@ const Layout = props => {
     padding: 8px;
   `;
 
+  const StyledTypography = matStyled(Typography)({
+    flexGrow: 1
+  });
+
+  const LogOutButton = matStyled(Button)({
+    marginRight: theme.spacing(2)
+  });
+
+  const StyledDrawer = matStyled(Drawer)({
+    width: drawerWidth,
+    flexShrink: 0
+  });
+
+  const ToolbarSpace = matStyled(Box)({
+    ...theme.mixins.toolbar
+  });
+
+  const StyledList = matStyled(List)({
+    width: drawerWidth
+  });
+
   const StyledMain = styled.main`
     flex-grow: 1;
     background-color: ${theme.palette.background.default};
@@ -62,43 +79,8 @@ const Layout = props => {
     margin-top: ${theme.spacing(8)}px;
   `;
 
-  const [selected, setSelected] = React.useState(props.selected);
-
-  const StyledListItem = matStyled(ListItem)({
-    "&.Mui-selected .MuiListItemText-primary": {
-      fontWeight: 600,
-      color: `${theme.palette.primary.dark}`
-    },
-
-    "&.Mui-selected .MuiListItemIcon-root": {
-      color: `${theme.palette.primary.dark} !important`
-    }
-  });
-
-  const ListItemLink = localProps => {
-    return (
-      <Link href={localProps.url} passHref>
-        <StyledListItem
-          button
-          selected={localProps.selector === selected}
-          onClick={localProps.onClick || setSelected(localProps.selector)}
-        >
-          <ListItemIcon>{localProps.children}</ListItemIcon>
-          <ListItemText primary={localProps.text} />
-        </StyledListItem>
-      </Link>
-    );
-  };
-
   const [open, setOpen] = React.useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const [selected, setSelected] = React.useState(props.selected);
 
   return (
     <>
@@ -110,44 +92,61 @@ const Layout = props => {
         <CssBaseline />
         <StyledAppBar position="fixed">
           <Toolbar>
-            <Typography variant="h6" noWrap>
+            <ImageContainer>
+              <StyledImg src="/logo_white.png" />
+            </ImageContainer>
+            <StyledTypography variant="h6" noWrap>
               Are we going to have a header?
-            </Typography>
+            </StyledTypography>
+            <Button color="inherit" onClick={logout}>
+              Log Out
+            </Button>
           </Toolbar>
         </StyledAppBar>
         <StyledDrawer variant="permanent" anchor="left">
-          <StyledImg src="/logo.png" />
-
-          <Divider />
+          <ToolbarSpace />
           <StyledList>
-            <ListItemLink url="/profile" text="Profile" selector="profile">
+            <SideBarItem
+              url="/profile"
+              text="Profile"
+              selected={"profile" === selected}
+              onClick={() => setSelected("profile")}
+            >
               <ProfileIcon />
-            </ListItemLink>
-            <ListItemLink url="/users" text="Users" selector="users">
+            </SideBarItem>
+            <SideBarItem
+              url="/users"
+              text="Users"
+              selected={"users" === selected}
+              onClick={() => setSelected("users")}
+            >
               <UserIcon />
-            </ListItemLink>
+            </SideBarItem>
           </StyledList>
           <Divider />
           <StyledList>
-            <ListItemLink
+            <SideBarItem
               url=""
               text="Create Article"
-              selector="create_article"
-              onClick={handleOpen}
+              onClick={() => setOpen(true)}
+              selected={false}
             >
               <CreateIcon />
-            </ListItemLink>
-            <CAM open={open} handleClose={handleClose} />
-            <ListItemLink
+            </SideBarItem>
+            <ArtMod open={open} handleClose={() => setOpen(false)} />
+            <SideBarItem
               url="/articles"
               text="View articles"
-              selector="view_articles"
-              onClick="undefined"
+              selected={"view_articles" === selected}
+              onClick={() => setSelected("view_articles")}
             >
               <ViewIcon />
-            </ListItemLink>
+            </SideBarItem>
           </StyledList>
           <Divider />
+          <StyledList>
+            <MyArticles selected={selected} setSelected={setSelected} />
+          </StyledList>
         </StyledDrawer>
         <StyledMain>{props.children}</StyledMain>
       </FlexBox>
