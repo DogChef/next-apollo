@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import Cookies from "js-cookie";
 import Router from "next/router";
-import ArticlesComponent from "../components/Users";
 import Layout from "../components/core/Layout";
 import { useRouter } from "next/router";
 

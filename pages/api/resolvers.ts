@@ -29,6 +29,14 @@ const setTokens = ({ dataValues: { id, email } }) => {
   return { accessToken, refreshToken };
 };
 
+const authenticated = next => (root, args, context, info) => {
+  if (!context.currentUserId) {
+    throw new AuthenticationError("No user detected, please log in.");
+  }
+
+  return next(root, args, context, info);
+};
+
 const resolvers = {
   Date: new GraphQLScalarType({
     name: "Date",
@@ -48,20 +56,18 @@ const resolvers = {
   }),
 
   Query: {
+    verifyUser: (parent, args, { currentUserId }) =>
+      db.user.findByPk(currentUserId),
     getUser: (parent, { id }, { dataSources: { db } }) => db.user.findByPk(id),
-    getUsers: (parent, args, { dataSources: { db }, req, currentUser }) => {
-      /*const decoded = decodedToken(req, secret);*/
-      if (currentUser === undefined) {
-        throw new AuthenticationError("No user detected, please log in.");
-      }
-
+    getUsers: (parent, args, { dataSources: { db }, currentUser }) => {
       return db.user.findAll();
     },
 
     getArticle: (parent, { id }, { dataSources: { db } }) =>
       db.article.findByPk(id),
-    getArticles: (parent, args, { dataSources: { db } }) =>
-      db.article.findAll(),
+    getArticles: authenticated((parent, args, { dataSources: { db } }) =>
+      db.article.findAll()
+    ),
 
     getTag: (parent, { id }, { dataSources: { db } }) => db.tag.findByPk(id),
     getTags: (parent, args, { dataSources: { db } }) => db.tag.findAll()
@@ -109,10 +115,12 @@ const resolvers = {
             "The email and password you entered did not match our records. Please double-check and try again."
           );
         }),
-    createArticle: (parent, { articleInput }, { dataSources: { db } }) => {
-      articleInput.authorId = "1";
-      return db.article.create(articleInput);
-    }
+    createArticle: authenticated(
+      (parent, { articleInput }, { dataSources: { db }, currentUserId }) => {
+        articleInput.authorId = currentUserId;
+        return db.article.create(articleInput);
+      }
+    )
   },
   User: {
     articles: user => user.getArticles()

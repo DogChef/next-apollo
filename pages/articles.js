@@ -3,14 +3,9 @@ import Cookies from "js-cookie";
 import Router from "next/router";
 import ArticlesComponent from "../components/Articles";
 import Layout from "../components/core/Layout";
+import withAuth from "../lib/withAuth";
 
 const Articles = () => {
-  if (!Cookies.get("signedIn")) {
-    useEffect(() => {
-      Router.push("/");
-    });
-  }
-
   return (
     <Layout title="View articles" selected="view_articles">
       <h1> la vista cambio </h1>
@@ -19,4 +14,4 @@ const Articles = () => {
   );
 };
 
-export default Articles;
+export default withAuth({})(Articles);

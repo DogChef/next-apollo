@@ -74,7 +74,7 @@ const CreateArticleModal = props => {
       )
       .catch(err => {
         //TODO: Add error management
-        console.log(err);
+        console.log("Error art");
       });
   };
 

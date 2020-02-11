@@ -1,5 +1,7 @@
 const Queries = `
   type Query {
+    verifyUser: User
+    
     getUser(id: ID!): User
     getUsers: [User]!
 
