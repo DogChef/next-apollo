@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 
 function MyApp({ Component, pageProps }) {
   if (Cookies.get("signedin")) {
-    navigate("/home");
+    navigate("/users");
   }
 
   return (
