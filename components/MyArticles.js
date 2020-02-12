@@ -26,16 +26,19 @@ const MyArticles = props => {
 
   return (
     <>
-      {data.verifyUser?.articles?.map(({ id, title }, index) => (
-        <SideBarItem
-          url={`/article/${title}-${id}`}
-          text={title}
-          selected={false}
-          key={index}
-        >
-          <ArticleIcon />
-        </SideBarItem>
-      ))}
+      {data.verifyUser?.articles?.map(({ id, title }, index) => {
+        const titleId = `${title}-${id}`;
+        return (
+          <SideBarItem
+            url={`/article/${titleId}`}
+            text={title}
+            selected={titleId === props.selected}
+            key={index}
+          >
+            <ArticleIcon />
+          </SideBarItem>
+        );
+      })}
     </>
   );
 };

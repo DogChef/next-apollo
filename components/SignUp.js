@@ -57,7 +57,7 @@ const SignUp = props => {
     marginTop: theme.spacing(1)
   });
 
-  const submition = (values, { setSubmitting, setErrors }) => {
+  const submition = (values, { setErrors }) => {
     signUpUser({
       variables: {
         name: values.fname,

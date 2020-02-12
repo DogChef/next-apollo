@@ -118,6 +118,7 @@ const resolvers = {
     createArticle: authenticated(
       (parent, { articleInput }, { dataSources: { db }, currentUserId }) => {
         articleInput.authorId = currentUserId;
+        console.log(articleInput);
         return db.article.create(articleInput);
       }
     )

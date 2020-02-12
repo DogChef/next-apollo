@@ -77,6 +77,8 @@ const Layout = props => {
     background-color: ${theme.palette.background.default};
     padding: ${theme.spacing(3)}px;
     margin-top: ${theme.spacing(8)}px;
+    align-items: center;
+    justify-content: center;
   `;
 
   const [open, setOpen] = React.useState(false);
