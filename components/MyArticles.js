@@ -28,6 +28,7 @@ const MyArticles = props => {
     <>
       {data.verifyUser?.articles?.map(({ id, title }, index) => {
         const titleId = `${title}-${id}`;
+
         return (
           <SideBarItem
             url={`/article/${titleId}`}
