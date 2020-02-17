@@ -1,3 +1,6 @@
+//TODO:: change query names to be more readable when used on components
+//Example: getUser to user, getUsers to users and so on
+
 const Queries = `
   type Query {
     verifyUser: User

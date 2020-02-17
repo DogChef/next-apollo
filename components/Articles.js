@@ -9,6 +9,7 @@ const GET_ARTICLES = gql`
     getArticles {
       id
       title
+      body
       author {
         id
         name
@@ -33,10 +34,11 @@ const Articles = () => {
       {data.getArticles.length > 0 && (
         <Typography variant="h5">They are:</Typography>
       )}
-      {data.getArticles.map(({ id, title, author }, index) => (
+      {data.getArticles.map(({ id, title, body, author }, index) => (
         <ul key={index}>
           <li>id: {id} </li>
           <li>title: {title} </li>
+          <li>body: {body} </li>
           <li>author Id: {author.id} </li>
           <li>author name: {author.name} </li>
         </ul>
