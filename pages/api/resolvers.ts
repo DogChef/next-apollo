@@ -1,6 +1,10 @@
 import { GraphQLScalarType } from "graphql";
 import { Kind } from "graphql/language";
-import { UserInputError, AuthenticationError, ApolloError } from "apollo-server-micro";
+import {
+  UserInputError,
+  AuthenticationError,
+  ApolloError
+} from "apollo-server-micro";
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -110,11 +114,11 @@ const resolvers = {
             throw null;
           }
         })
-        .catch(err => 
-          UserInputError(
+        .catch(err => {
+          throw new UserInputError(
             "The email and password you entered did not match our records. Please double-check and try again."
-          )
-        ),
+          );
+        }),
     createArticle: authenticated(
       (parent, { articleInput }, { dataSources: { db }, currentUserId }) => {
         articleInput.authorId = currentUserId;
@@ -122,16 +126,16 @@ const resolvers = {
       }
     ),
     updateArticle: authenticated(
-      (parent, { articleInput }, { dataSources: { db }, currentUserId }) => 
-        db.article.findByPk(articleInput.id)
+      (parent, { articleInput }, { dataSources: { db }, currentUserId }) =>
+        db.article
+          .findByPk(articleInput.id)
           .then(article => {
-            article.update(articleInput);
-            return article;
+            return article.update(articleInput);
           })
-          .catch(err => 
-            ApolloError(err)
-          )
-      )
+          .catch(err => {
+            throw new ApolloError(err);
+          })
+    )
   },
   User: {
     articles: user => user.getArticles()

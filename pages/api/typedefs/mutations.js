@@ -29,7 +29,7 @@ const Mutations = `
 
   input ArticleUpdateInput {
     id: ID
-    title: String!
+    title: String
     body: String
     tags: [ID] 
   }
