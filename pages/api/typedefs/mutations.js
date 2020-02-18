@@ -8,6 +8,35 @@ const Mutations = `
 
     createTag(tagInput: TagInput): Tag
   }
+
+  input UserLoginInput {
+    email: String!
+    password: String!
+  }
+
+  input UserCreateInput {
+    name: String
+    email: String!
+    password: String!
+  }
+
+  input ArticleCreateInput {
+    title: String!
+    body: String
+    authorId: ID
+    tags: [ID]
+  }
+
+  input ArticleUpdateInput {
+    id: ID
+    title: String
+    body: String
+    tags: [ID] 
+  }
+
+  input TagInput {
+    name: String!
+  }
 `;
 
 export default Mutations;

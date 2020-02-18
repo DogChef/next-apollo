@@ -14,7 +14,20 @@ const MyApp = ({ Component, pageProps }) => {
     <>
       <Head>
         <link rel="icon" href="/favicon.ico" />
+        <link
+          href="https://cdn.syncfusion.com/ej2/material.css"
+          rel="stylesheet"
+        />
+        <link
+          href="//cdn.syncfusion.com/ej2/ej2-react-richtexteditor/styles/material.css"
+          rel="stylesheet"
+        />
+        <link
+          href="//cdn.syncfusion.com/ej2/ej2-react-buttons/styles/material.css"
+          rel="stylesheet"
+        />
       </Head>
+
       <ThemeProvider theme={theme}>
         <Component {...pageProps} />
       </ThemeProvider>

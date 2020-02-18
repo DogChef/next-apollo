@@ -1,4 +1,4 @@
-const Models = `
+const Types = `
   scalar Date
 
   type User {
@@ -29,4 +29,4 @@ const Models = `
   }
 `;
 
-export default Models;
+export default Types;

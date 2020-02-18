@@ -8,7 +8,11 @@ import {
   Box,
   Button,
   Fade,
-  Modal,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   styled as matStyled,
   TextField,
   Typography,
@@ -19,25 +23,31 @@ const CREATE_ARTICLE = gql`
   mutation createArticle($title: String!) {
     createArticle(articleInput: { title: $title }) {
       id
+      title
     }
   }
 `;
 
-const CreateArticleModal = props => {
+const CreateArticleDialog = props => {
   const theme = useTheme();
   const [createArticle, { data }] = useMutation(CREATE_ARTICLE);
 
-  const StyledModal = matStyled(Modal)({
+  const StyledDialog = matStyled(Dialog)({
     display: "flex",
     alignItems: "center",
     justifyContent: "center"
   });
 
-  const ModalContent = matStyled(Box)({
-    backgroundColor: theme.palette.background.paper,
-    border: "2px solid #000",
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3)
+  const StyledDialogContent = matStyled(DialogContent)({
+    padding: `${theme.spacing(0, 3, 3)} !important`
+  });
+
+  const StyledTitle = matStyled(DialogTitle)({
+    textAlign: "center"
+  });
+
+  const StyledForm = matStyled(Form)({
+    width: "100%"
   });
 
   const StyledButton = matStyled(Button)({
@@ -47,15 +57,7 @@ const CreateArticleModal = props => {
     margin: "0px"
   });
 
-  const StyledForm = matStyled(Form)({
-    width: "100%"
-  });
-
-  const StyledTypography = matStyled(Typography)({
-    textAlign: "center"
-  });
-
-  const submition = (values, { setSubmitting, setErrors }) => {
+  const submition = values => {
     createArticle({
       variables: {
         title: values.title
@@ -64,11 +66,11 @@ const CreateArticleModal = props => {
       .then(
         ({
           data: {
-            createArticle: { id }
+            createArticle: { id, title }
           }
         }) => {
           if (id) {
-            Router.push(`/${id}`);
+            Router.push(`/article/${title}-${id}`);
           }
         }
       )
@@ -79,59 +81,43 @@ const CreateArticleModal = props => {
   };
 
   return (
-    <StyledModal
-      open={props.open}
-      onClose={props.handleClose}
-      closeAfterTransition
-      BackdropComponent={Backdrop}
-      BackdropProps={{
-        timeout: 500
-      }}
-    >
-      <Fade in={props.open}>
-        <ModalContent>
-          <StyledTypography variant="h5">New article</StyledTypography>
-          <Formik
-            initialValues={{ title: "" }}
-            onSubmit={submition}
-            validateOnBlur={false}
-          >
-            {({
-              values: { title },
-              errors,
-              touched,
-              handleBlur,
-              handleChange
-            }) => (
-              <StyledForm noValidate>
-                <Field
-                  id="title"
-                  label="Add a title"
-                  placeholder="Untitled"
-                  variant="outlined"
-                  margin="normal"
-                  value={title}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  component={TextField}
-                  autoFocus
-                  fullWidth
-                />
-                <StyledButton
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                >
-                  Submit
-                </StyledButton>
-              </StyledForm>
-            )}
-          </Formik>
-        </ModalContent>
-      </Fade>
-    </StyledModal>
+    <Dialog open={props.open} onClose={props.handleClose}>
+      <StyledTitle id="form-dialog-title">New Article</StyledTitle>
+      <Formik
+        initialValues={{ title: "" }}
+        onSubmit={submition}
+        validateOnBlur={false}
+      >
+        {({ values: { title }, errors, touched, handleBlur, handleChange }) => (
+          <StyledForm noValidate>
+            <StyledDialogContent>
+              <Field
+                id="title"
+                label="Add a title"
+                placeholder="Untitled"
+                variant="outlined"
+                margin="normal"
+                value={title}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                component={TextField}
+                autoFocus
+                fullWidth
+              />
+              <StyledButton
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+              >
+                Submit
+              </StyledButton>
+            </StyledDialogContent>
+          </StyledForm>
+        )}
+      </Formik>
+    </Dialog>
   );
 };
 
-export default CreateArticleModal;
+export default CreateArticleDialog;

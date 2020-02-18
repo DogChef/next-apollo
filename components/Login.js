@@ -51,7 +51,7 @@ const Login = props => {
     marginTop: theme.spacing(1)
   });
 
-  const submition = (values, { setSubmitting, setErrors }) => {
+  const submition = (values, { setErrors }) => {
     logInUser({
       variables: {
         email: values.email,
@@ -126,6 +126,7 @@ const Login = props => {
               placeholder="Enter your Password"
               variant="outlined"
               margin="normal"
+              autoComplete="current-password"
               value={password}
               onBlur={handleBlur}
               onChange={handleChange}
