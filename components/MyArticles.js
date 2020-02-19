@@ -13,6 +13,9 @@ const GET_CURRENT_USER_ARTICLES = gql`
       articles {
         id
         title
+        children {
+          id
+        }
       }
     }
   }

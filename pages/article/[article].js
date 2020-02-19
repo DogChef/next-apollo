@@ -40,12 +40,8 @@ const mainStyles = `
 
 const Article = () => {
   const { article } = useRouter().query;
-
-  const idRegEx = /(.*)\-(\d+)$/;
-  const [string, title, id] = idRegEx.exec(article);
-
   const queryData = useQuery(GET_ARTICLE, {
-    variables: { id }
+    variables: { id: /(.*)\-(\d+)$/.exec(article)[2] }
   });
 
   const status =
@@ -55,7 +51,7 @@ const Article = () => {
   const queryArticle = queryData.data?.getArticle;
 
   return (
-    <Layout title="View Article" selected={string} mainStyles={mainStyles}>
+    <Layout title="View Article" selected={article} mainStyles={mainStyles}>
       <ArticleEditor status={status} article={queryArticle} />
     </Layout>
   );

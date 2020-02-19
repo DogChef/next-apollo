@@ -142,7 +142,9 @@ const resolvers = {
   },
   Article: {
     author: article => article.getAuthor(),
-    tags: article => article.getTags()
+    tags: article => article.getTags(),
+    parent: article => article.getParent(),
+    children: article => article.getChildren()
   },
   Tag: {
     articles: tag => tag.getArticles()

@@ -26,6 +26,14 @@ module.exports = (sequelize, DataTypes) => {
           key: "id"
         }
       },
+      parentId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "articles",
+          key: "id"
+        }
+      },
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE
     },
@@ -34,6 +42,8 @@ module.exports = (sequelize, DataTypes) => {
 
   Article.associate = function(models) {
     Article.belongsTo(models.user, { foreignKey: "authorId", as: "author" });
+    Article.belongsTo(models.article, { foreignKey: "parentId", as: "parent" });
+    Article.hasMany(models.article, { foreignKey: "parentId", as: "Children" });
     Article.belongsToMany(models.tag, {
       through: "articleTags",
       foreignKey: "articleId"

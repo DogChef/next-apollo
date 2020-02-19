@@ -24,6 +24,7 @@ const Mutations = `
     title: String!
     body: String
     authorId: ID
+    parent: ID
     tags: [ID]
   }
 
@@ -31,6 +32,7 @@ const Mutations = `
     id: ID
     title: String
     body: String
+    children: [ID]
     tags: [ID] 
   }
 
