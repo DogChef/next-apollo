@@ -141,7 +141,25 @@ const resolvers = {
     author: article => article.getAuthor(),
     tags: article => article.getTags(),
     parent: article => article.getParent(),
-    children: article => article.getChildren()
+    children: article => article.getChildren(),
+    rootPath: async article => {
+      const path = [];
+
+      var parent = article.parentId ? article : null;
+
+      while (parent) {
+        const newParent = await parent.getParent();
+        if (newParent?.dataValues) {
+          const data = newParent.dataValues;
+          path.push(data.id);
+          parent = newParent;
+        } else {
+          parent = null;
+        }
+      }
+
+      return path;
+    }
   },
   Tag: {
     articles: tag => tag.getArticles()

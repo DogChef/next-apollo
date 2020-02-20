@@ -21,6 +21,7 @@ const GET_ARTICLE = gql`
     getArticle(id: $id) {
       id
       title
+      rootPath
       children {
         id
         title

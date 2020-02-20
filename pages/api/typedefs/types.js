@@ -18,6 +18,7 @@ const Types = `
     tags: [Tag]
     parent: Article
     children: [Article]
+    rootPath: [ID]
     createdAt: Date
     updatedAt: Date
   }
