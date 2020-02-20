@@ -24,7 +24,7 @@ const Mutations = `
     title: String!
     body: String
     authorId: ID
-    parent: ID
+    parentId: ID
     tags: [ID]
   }
 

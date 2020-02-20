@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography, styled as matStyled } from "@material-ui/core";
+import moment from "moment";
 import {
   RichTextEditorComponent,
   Inject,
@@ -44,25 +45,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const formatDate = date => {
-  const hours = date.getHours();
-  const seconds = date.getSeconds();
-  return `${hours}:${date.getMinutes()}:${
-    seconds < 10 ? `0${seconds}` : seconds
-  }${hours > 12 ? "pm" : "am"} - ${date.getDate()}/${date.getMonth() +
-    1}/${date.getFullYear()}`;
-};
-
 const ArticleEditor = ({ status, article }) => {
   const classes = useStyles();
+  const [loaded, didLoad] = useState(false);
+  const [lastTimeSaved, savedAt] = useState(
+    article && `Last update: ${moment(article.updatedAt).format("LLL")}`
+  );
+  const [writeArticle, { data }] = useMutation(WRITE_ARTICLE);
 
-  const initialState =
-    article && `Last update: ${formatDate(new Date(article?.updatedAt))}`;
   const author = article && `Created by: ${article.author.name}`;
 
-  const [lastTimeSaved, savedAt] = useState(initialState);
-  const [writeArticle, { data }] = useMutation(WRITE_ARTICLE);
-  const [loaded, didLoad] = useState(false);
   const onSave = newBody => {
     writeArticle({
       variables: {
@@ -77,7 +69,7 @@ const ArticleEditor = ({ status, article }) => {
             updateArticle: { updatedAt }
           }
         }) => {
-          savedAt(`Last saved at: ${formatDate(new Date(updatedAt))}`);
+          savedAt(`Saved at: ${moment(updatedAt).format("LLL")}`);
         }
       )
       .catch(err => {
@@ -87,7 +79,7 @@ const ArticleEditor = ({ status, article }) => {
 
   const editorLoaded = () => {
     setTimeout(() => {
-      didLoad(article !== undefined);
+      didLoad(!!article);
     }, 1);
   };
 
@@ -104,7 +96,7 @@ const ArticleEditor = ({ status, article }) => {
         inlineMode={{ enable: true, onSelection: true }}
         locale={"es-AR"}
         readonly={status !== undefined}
-        saveInterval={5000 /*miliseconds*/}
+        saveInterval={300 /*miliseconds*/}
         showCharCount={true}
         toolbarSettings={{
           enable: true,

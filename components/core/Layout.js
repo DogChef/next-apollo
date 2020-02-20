@@ -1,7 +1,8 @@
 import React from "react";
 import Head from "next/head";
 import ArtMod from "../CreateArticleModal";
-import MyArticles from "../MyArticles";
+import SideBarArticles from "../SideBarArticles";
+import Header from "./Header";
 import SideBarItem from "./SideBarItem";
 import { logout } from "../../lib/useAuth";
 import styled from "styled-components";
@@ -14,6 +15,7 @@ import {
   Divider,
   Drawer,
   List,
+  ListItemIcon,
   Toolbar,
   Typography
 } from "@material-ui/core";
@@ -25,33 +27,16 @@ import {
   PermIdentity as ProfileIcon
 } from "@material-ui/icons";
 
-const drawerWidth = 240;
+const drawerWidth = 300;
 
 const Layout = props => {
   const theme = useTheme();
+  const [open, setOpen] = React.useState(false);
+  const [selected, setSelected] = React.useState(props.selected);
+  const [articleId, setArticleId] = React.useState(null);
 
   const FlexBox = matStyled(Box)({
     display: "flex",
-    flexGrow: 1
-  });
-
-  const StyledAppBar = matStyled(AppBar)({
-    width: "100%",
-    zIndex: theme.zIndex.drawer + 1
-  });
-
-  const ImageContainer = matStyled(Box)({
-    width: drawerWidth
-  });
-
-  const StyledImg = styled.img`
-    width: 134px;
-    height: 63px;
-    margin: 0 auto;
-    padding: 8px;
-  `;
-
-  const StyledTypography = matStyled(Typography)({
     flexGrow: 1
   });
 
@@ -80,8 +65,10 @@ const Layout = props => {
     ${props.mainStyles}
   `;
 
-  const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState(props.selected);
+  const addSubArticle = id => {
+    setArticleId(id);
+    setOpen(true);
+  };
 
   return (
     <>
@@ -91,19 +78,7 @@ const Layout = props => {
 
       <FlexBox>
         <CssBaseline />
-        <StyledAppBar position="fixed">
-          <Toolbar>
-            <ImageContainer>
-              <StyledImg src="/logo_white.png" />
-            </ImageContainer>
-            <StyledTypography variant="h6" noWrap>
-              Are we going to have a header?
-            </StyledTypography>
-            <Button color="inherit" onClick={logout}>
-              Log Out
-            </Button>
-          </Toolbar>
-        </StyledAppBar>
+        <Header logout={logout} drawerWidth={drawerWidth} />
         <StyledDrawer variant="permanent" anchor="left">
           <ToolbarSpace />
           <StyledList>
@@ -113,7 +88,9 @@ const Layout = props => {
               selected={"profile" === selected}
               onClick={() => setSelected("profile")}
             >
-              <ProfileIcon />
+              <ListItemIcon>
+                <ProfileIcon />
+              </ListItemIcon>
             </SideBarItem>
             <SideBarItem
               url="/users"
@@ -121,7 +98,9 @@ const Layout = props => {
               selected={"users" === selected}
               onClick={() => setSelected("users")}
             >
-              <UserIcon />
+              <ListItemIcon>
+                <UserIcon />
+              </ListItemIcon>
             </SideBarItem>
           </StyledList>
           <Divider />
@@ -132,24 +111,35 @@ const Layout = props => {
               onClick={() => setOpen(true)}
               selected={false}
             >
-              <CreateIcon />
+              <ListItemIcon>
+                <CreateIcon />
+              </ListItemIcon>
             </SideBarItem>
-            <ArtMod open={open} handleClose={() => setOpen(false)} />
             <SideBarItem
               url="/articles"
               text="View articles"
               selected={"view_articles" === selected}
               onClick={() => setSelected("view_articles")}
             >
-              <ViewIcon />
+              <ListItemIcon>
+                <ViewIcon />
+              </ListItemIcon>
             </SideBarItem>
           </StyledList>
           <Divider />
           <StyledList>
-            <MyArticles selected={selected} setSelected={setSelected} />
+            <SideBarArticles
+              selected={selected}
+              addSubArticle={addSubArticle}
+            />
           </StyledList>
         </StyledDrawer>
         <StyledMain>{props.children}</StyledMain>
+        <ArtMod
+          open={open}
+          parentId={articleId}
+          handleClose={() => setOpen(false)}
+        />
       </FlexBox>
     </>
   );

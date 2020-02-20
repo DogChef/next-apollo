@@ -35,13 +35,12 @@ const Index = () => {
   const theme = useTheme();
   const [isLogin, changeComponent] = useState(true);
 
-  if (Cookies.get("signedIn")) {
-    useEffect(() => {
+  useEffect(() => {
+    if (Cookies.get("signedIn")) {
       Router.push("/users");
-    });
-
-    return null;
-  }
+      return null;
+    }
+  });
 
   const RootGrid = matStyled(Grid)({
     display: "flex",

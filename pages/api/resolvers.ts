@@ -9,7 +9,6 @@ import {
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const secret = "supersecret";
-const util = require("util");
 
 const setTokens = ({ dataValues: { id, email } }) => {
   const sevenDays = 60 * 60 * 24 * 7 * 1000;
@@ -120,10 +119,8 @@ const resolvers = {
           );
         }),
     createArticle: authenticated(
-      (parent, { articleInput }, { dataSources: { db }, currentUserId }) => {
-        articleInput.authorId = currentUserId;
-        return db.article.create(articleInput);
-      }
+      (parent, { articleInput }, { dataSources: { db }, currentUserId }) =>
+        db.article.create({ ...articleInput, authorId: currentUserId })
     ),
     updateArticle: authenticated(
       (parent, { articleInput }, { dataSources: { db }, currentUserId }) =>
