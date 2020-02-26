@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography, styled as matStyled } from "@material-ui/core";
+import moment from "moment";
 import {
   RichTextEditorComponent,
   Inject,
@@ -35,7 +36,8 @@ const useStyles = makeStyles(theme => ({
     },
 
     "&.e-control .e-content": {
-      fontSize: "18pt !important"
+      fontSize: "18pt !important",
+      padding: 0
     },
 
     "&.e-control .e-dlg-header": {
@@ -44,25 +46,26 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const formatDate = date => {
-  const hours = date.getHours();
-  const seconds = date.getSeconds();
-  return `${hours}:${date.getMinutes()}:${
-    seconds < 10 ? `0${seconds}` : seconds
-  }${hours > 12 ? "pm" : "am"} - ${date.getDate()}/${date.getMonth() +
-    1}/${date.getFullYear()}`;
-};
+const StyledTypography = matStyled(Typography)({
+  flexGrow: 1
+});
+
+const StyledGrid = matStyled(Grid)({
+  alignSelf: "flex-end"
+});
 
 const ArticleEditor = ({ status, article }) => {
   const classes = useStyles();
+  const [loaded, didLoad] = useState(false);
+  const [lastTimeSaved, savedAt] = useState("");
+  const [writeArticle, { data }] = useMutation(WRITE_ARTICLE);
 
-  const initialState =
-    article && `Last update: ${formatDate(new Date(article?.updatedAt))}`;
   const author = article && `Created by: ${article.author.name}`;
 
-  const [lastTimeSaved, savedAt] = useState(initialState);
-  const [writeArticle, { data }] = useMutation(WRITE_ARTICLE);
-  const [loaded, didLoad] = useState(false);
+  !!article &&
+    lastTimeSaved == "" &&
+    savedAt(`Last update: ${moment(article.updatedAt).format("LLL")}`);
+
   const onSave = newBody => {
     writeArticle({
       variables: {
@@ -77,34 +80,29 @@ const ArticleEditor = ({ status, article }) => {
             updateArticle: { updatedAt }
           }
         }) => {
-          savedAt(`Last saved at: ${formatDate(new Date(updatedAt))}`);
+          savedAt(`Saved at: ${moment(updatedAt).format("LLL")}`);
         }
       )
       .catch(err => {
-        console.log(`todo mal la mutation ${err}`);
+        console.log(`Article Editor Mutation Error: ${err}`);
       });
-  };
-
-  const editorLoaded = () => {
-    setTimeout(() => {
-      didLoad(article !== undefined);
-    }, 1);
   };
 
   return (
     <>
-      {article && <Typography variant="h3">{article.title}</Typography>}
+      {article && (
+        <StyledTypography variant="h3">{article.title}</StyledTypography>
+      )}
       <RichTextEditorComponent
         id="inlineRTE"
         change={valueTemplate => onSave(valueTemplate.value)}
         className={classes.editor}
-        created={editorLoaded()}
         enableResize={false}
         enableTabKey={true}
         inlineMode={{ enable: true, onSelection: true }}
         locale={"es-AR"}
         readonly={status !== undefined}
-        saveInterval={5000 /*miliseconds*/}
+        saveInterval={300 /*miliseconds*/}
         showCharCount={true}
         toolbarSettings={{
           enable: true,
@@ -141,16 +139,14 @@ const ArticleEditor = ({ status, article }) => {
           services={[Image, Link, QuickToolbar, HtmlEditor, Toolbar, Count]}
         />
       </RichTextEditorComponent>
-      {loaded && (
-        <Grid container>
-          <Grid item xs={6}>
-            <Typography variant="h5">{author}</Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography variant="h5">{lastTimeSaved}</Typography>
-          </Grid>
+      <StyledGrid container>
+        <Grid item xs={6}>
+          <Typography variant="h5">{author}</Typography>
         </Grid>
-      )}
+        <Grid item xs={6}>
+          <Typography variant="h5">{lastTimeSaved}</Typography>
+        </Grid>
+      </StyledGrid>
     </>
   );
 };

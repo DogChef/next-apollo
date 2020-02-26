@@ -10,6 +10,14 @@ const GET_ARTICLES = gql`
       id
       title
       body
+      parent {
+        id
+        title
+      }
+      children {
+        id
+        title
+      }
       author {
         id
         name
@@ -20,6 +28,7 @@ const GET_ARTICLES = gql`
 
 const Articles = () => {
   const { loading, error, data } = useQuery(GET_ARTICLES);
+  const util = require("util");
 
   if (loading) return "Loading...";
   if (error) return `Error! ${error.message}`;
@@ -34,15 +43,20 @@ const Articles = () => {
       {data.getArticles.length > 0 && (
         <Typography variant="h5">They are:</Typography>
       )}
-      {data.getArticles.map(({ id, title, body, author }, index) => (
-        <ul key={index}>
-          <li>id: {id} </li>
-          <li>title: {title} </li>
-          <li>body: {body} </li>
-          <li>author Id: {author.id} </li>
-          <li>author name: {author.name} </li>
-        </ul>
-      ))}
+      {data.getArticles.map(
+        ({ id, title, body, parent, children, author }, index) => (
+          <ul key={index}>
+            <li>id: {id} </li>
+            <li>title: {title} </li>
+            <li>body: {util.inspect(body)} </li>
+            <li>parent: {util.inspect(parent)}</li>
+            <li>children: {util.inspect(children)} </li>
+            <li>
+              author: {author.id} {author.name}{" "}
+            </li>
+          </ul>
+        )
+      )}
     </>
   );
 };

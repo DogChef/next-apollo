@@ -20,8 +20,8 @@ import {
 } from "@material-ui/core";
 
 const CREATE_ARTICLE = gql`
-  mutation createArticle($title: String!) {
-    createArticle(articleInput: { title: $title }) {
+  mutation createArticle($title: String!, $parentId: ID) {
+    createArticle(articleInput: { title: $title, parentId: $parentId }) {
       id
       title
     }
@@ -60,7 +60,8 @@ const CreateArticleDialog = props => {
   const submition = values => {
     createArticle({
       variables: {
-        title: values.title
+        title: values.title,
+        parentId: props.parentId
       }
     })
       .then(
@@ -76,7 +77,7 @@ const CreateArticleDialog = props => {
       )
       .catch(err => {
         //TODO: Add error management
-        console.log("Error art");
+        console.log(`Error Create Article Modal: ${err}`);
       });
   };
 

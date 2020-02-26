@@ -6,15 +6,7 @@ import SignUp from "../components/SignUp";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Cookies from "js-cookie";
 import Router from "next/router";
-import {
-  Avatar,
-  Box,
-  CssBaseline,
-  Grid,
-  Link,
-  Paper,
-  Typography
-} from "@material-ui/core";
+import { Avatar, Box, Grid, Link, Paper, Typography } from "@material-ui/core";
 
 const Copyright = () => {
   return (
@@ -35,13 +27,11 @@ const Index = () => {
   const theme = useTheme();
   const [isLogin, changeComponent] = useState(true);
 
-  if (Cookies.get("signedIn")) {
-    useEffect(() => {
+  useEffect(() => {
+    if (Cookies.get("signedIn")) {
       Router.push("/users");
-    });
-
-    return null;
-  }
+    }
+  }, []);
 
   const RootGrid = matStyled(Grid)({
     display: "flex",
@@ -69,29 +59,38 @@ const Index = () => {
   });
 
   return (
-    <>
-      <CssBaseline />
-      <Head>
-        <title>Welcome to Lotion</title>
-      </Head>
+    !Cookies.get("signedIn") && (
+      <>
+        <Head>
+          <title>Welcome to Lotion</title>
+        </Head>
 
-      <RootGrid container="true" component="main">
-        <IndexPhoto item xs={false} sm={4} md={7} />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <CenteredBox>
-            <StyledAvatar>
-              <LockOutlinedIcon />
-            </StyledAvatar>
-            {isLogin ? (
-              <Login changeComponent={changeComponent} />
-            ) : (
-              <SignUp changeComponent={changeComponent} />
-            )}
-            <Copyright />
-          </CenteredBox>
-        </Grid>
-      </RootGrid>
-    </>
+        <RootGrid container="true" component="main">
+          <IndexPhoto item xs={false} sm={4} md={7} />
+          <Grid
+            item
+            xs={12}
+            sm={8}
+            md={5}
+            component={Paper}
+            elevation={6}
+            square
+          >
+            <CenteredBox>
+              <StyledAvatar>
+                <LockOutlinedIcon />
+              </StyledAvatar>
+              {isLogin ? (
+                <Login changeComponent={changeComponent} />
+              ) : (
+                <SignUp changeComponent={changeComponent} />
+              )}
+              <Copyright />
+            </CenteredBox>
+          </Grid>
+        </RootGrid>
+      </>
+    )
   );
 };
 

@@ -16,6 +16,9 @@ const Types = `
     body: String
     author: User
     tags: [Tag]
+    parent: Article
+    children: [Article]
+    rootPath: [ID]
     createdAt: Date
     updatedAt: Date
   }
