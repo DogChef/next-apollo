@@ -2,13 +2,14 @@ import App from "next/app";
 import Head from "next/head";
 import { withApollo } from "../lib/apollo";
 import { ThemeProvider } from "@material-ui/core/styles";
+import { redirect } from "../lib/useAuth";
+import Layout from "../components/core/Layout";
 import theme from "./_theme";
 import Cookies from "js-cookie";
+import { CssBaseline } from "@material-ui/core";
 
-const MyApp = ({ Component, pageProps }) => {
-  if (Cookies.get("signedin")) {
-    navigate("/users");
-  }
+const MyApp = ({ Component, pageProps, router }) => {
+  const getLayout = Component.getLayout || (page => page);
 
   return (
     <>
@@ -29,7 +30,8 @@ const MyApp = ({ Component, pageProps }) => {
       </Head>
 
       <ThemeProvider theme={theme}>
-        <Component {...pageProps} />
+        <CssBaseline />
+        {getLayout(<Component {...pageProps} />, pageProps)}
       </ThemeProvider>
     </>
   );

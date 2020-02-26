@@ -12,7 +12,8 @@ const Header = props => {
   });
 
   const ImageContainer = matStyled(Box)({
-    width: props.drawerWidth
+    width: props.drawerWidth,
+    height: "64px"
   });
 
   const StyledImg = styled.img`

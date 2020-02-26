@@ -15,7 +15,7 @@ const SideBarItem = props => {
   const theme = useTheme();
 
   const StyledListItem = matStyled(ListItem)({
-    paddingLeft: theme.spacing(2 + props.hierarchy),
+    paddingLeft: theme.spacing(1 + props.hierarchy),
 
     "&.Mui-selected .MuiListItemText-primary": {
       fontWeight: 600,
@@ -29,7 +29,7 @@ const SideBarItem = props => {
 
   const StyledIcon = matStyled(ListItemIcon)({
     minWidth: 0,
-    paddingRight: "5px"
+    paddingRight: "3px"
   });
 
   const addSubArticle = event => {
@@ -38,7 +38,7 @@ const SideBarItem = props => {
   };
 
   return (
-    <Link href={props.url} passHref>
+    <Link href={props.url}>
       <StyledListItem button selected={props.selected} onClick={props.onClick}>
         {props.children}
         <ListItemText primary={props.text} />

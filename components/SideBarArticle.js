@@ -9,7 +9,6 @@ import {
   Typography
 } from "@material-ui/core";
 import SideBarItem from "./core/SideBarItem";
-import { ArticleIcon } from "./SideBarArticles";
 import {
   ChevronRight as ShowMoreIcon,
   ExpandLess as ShowLessIcon,
@@ -21,7 +20,6 @@ const GET_ARTICLE = gql`
     getArticle(id: $id) {
       id
       title
-      rootPath
       children {
         id
         title
@@ -30,8 +28,14 @@ const GET_ARTICLE = gql`
   }
 `;
 
+const ArticleIcon = matStyled(InsertDriveFileOutlined)({
+  fontSize: "1.2rem",
+  marginRight: "4px",
+  marginBottom: "1px"
+});
+
 const SideBarArticle = props => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(!!props.rootPath);
   const { loading, error, data } = useQuery(GET_ARTICLE, {
     variables: { id: props.id }
   });
@@ -52,10 +56,10 @@ const SideBarArticle = props => {
     <>
       <SideBarItem
         addSubArticle={() => props.addSubArticle(article?.id)}
+        hierarchy={props.hierarchy}
         selected={titleId === props.selected}
         text={article?.title}
         url={`/article/${titleId}`}
-        hierarchy={props.hierarchy}
       >
         <StyledListItemIcon onClick={handleOpen}>
           {open ? <ShowLessIcon /> : <ShowMoreIcon />}
@@ -66,10 +70,16 @@ const SideBarArticle = props => {
         {article?.children.map(({ id, title }, index) => (
           <SideBarArticle
             addSubArticle={props.addSubArticle}
-            selected={props.selected}
+            hierarchy={props.hierarchy + 1}
             id={id}
             key={index}
-            hierarchy={props.hierarchy + 1}
+            rootPath={
+              props.rootPath &&
+              id === props.rootPath[props.rootPath.length - props.hierarchy - 1]
+                ? props.rootPath
+                : undefined
+            }
+            selected={props.selected}
           />
         ))}
       </Collapse>

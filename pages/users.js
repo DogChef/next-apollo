@@ -5,12 +5,12 @@ import UsersComponent from "../components/Users";
 import Layout from "../components/core/Layout";
 import withAuth from "../lib/withAuth";
 
-const Users = () => {
-  return (
-    <Layout title="Welcome to Lotion" selected="users">
-      <UsersComponent />
-    </Layout>
-  );
-};
+const Users = () => <UsersComponent />;
+
+Users.getLayout = page => (
+  <Layout title="Welcome to Lotion" selected="users">
+    {page}
+  </Layout>
+);
 
 export default withAuth({})(Users);

@@ -10,10 +10,7 @@ import {
 } from "@material-ui/core";
 import SideBarItem from "./core/SideBarItem";
 import SideBarArticle from "./SideBarArticle";
-import {
-  ExpandMore as ArrowIcon,
-  InsertDriveFileOutlined
-} from "@material-ui/icons";
+import { ExpandMore as ArrowIcon } from "@material-ui/icons";
 
 const GET_ARTICLES = gql`
   {
@@ -27,12 +24,6 @@ const GET_ARTICLES = gql`
   }
 `;
 
-export const ArticleIcon = matStyled(InsertDriveFileOutlined)({
-  fontSize: "1.2rem",
-  marginRight: "4px",
-  marginBottom: "1px"
-});
-
 const SideBarArticles = props => {
   const { loading, error, data } = useQuery(GET_ARTICLES);
 
@@ -43,10 +34,15 @@ const SideBarArticles = props => {
           !parent && (
             <SideBarArticle
               addSubArticle={props.addSubArticle}
-              selected={props.selected}
+              hierarchy={1}
               id={id}
               key={index}
-              hierarchy={0}
+              rootPath={
+                id === props.rootPath[props.rootPath.length - 1]
+                  ? props.rootPath
+                  : undefined
+              }
+              selected={props.selected}
             />
           )
       )}

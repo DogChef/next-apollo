@@ -36,7 +36,8 @@ const useStyles = makeStyles(theme => ({
     },
 
     "&.e-control .e-content": {
-      fontSize: "18pt !important"
+      fontSize: "18pt !important",
+      padding: 0
     },
 
     "&.e-control .e-dlg-header": {
@@ -45,15 +46,25 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const StyledTypography = matStyled(Typography)({
+  flexGrow: 1
+});
+
+const StyledGrid = matStyled(Grid)({
+  alignSelf: "flex-end"
+});
+
 const ArticleEditor = ({ status, article }) => {
   const classes = useStyles();
   const [loaded, didLoad] = useState(false);
-  const [lastTimeSaved, savedAt] = useState(
-    article && `Last update: ${moment(article.updatedAt).format("LLL")}`
-  );
+  const [lastTimeSaved, savedAt] = useState("");
   const [writeArticle, { data }] = useMutation(WRITE_ARTICLE);
 
   const author = article && `Created by: ${article.author.name}`;
+
+  !!article &&
+    lastTimeSaved == "" &&
+    savedAt(`Last update: ${moment(article.updatedAt).format("LLL")}`);
 
   const onSave = newBody => {
     writeArticle({
@@ -73,24 +84,19 @@ const ArticleEditor = ({ status, article }) => {
         }
       )
       .catch(err => {
-        console.log(`todo mal la mutation ${err}`);
+        console.log(`Article Editor Mutation Error: ${err}`);
       });
-  };
-
-  const editorLoaded = () => {
-    setTimeout(() => {
-      didLoad(!!article);
-    }, 1);
   };
 
   return (
     <>
-      {article && <Typography variant="h3">{article.title}</Typography>}
+      {article && (
+        <StyledTypography variant="h3">{article.title}</StyledTypography>
+      )}
       <RichTextEditorComponent
         id="inlineRTE"
         change={valueTemplate => onSave(valueTemplate.value)}
         className={classes.editor}
-        created={editorLoaded()}
         enableResize={false}
         enableTabKey={true}
         inlineMode={{ enable: true, onSelection: true }}
@@ -133,16 +139,14 @@ const ArticleEditor = ({ status, article }) => {
           services={[Image, Link, QuickToolbar, HtmlEditor, Toolbar, Count]}
         />
       </RichTextEditorComponent>
-      {loaded && (
-        <Grid container>
-          <Grid item xs={6}>
-            <Typography variant="h5">{author}</Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography variant="h5">{lastTimeSaved}</Typography>
-          </Grid>
+      <StyledGrid container>
+        <Grid item xs={6}>
+          <Typography variant="h5">{author}</Typography>
         </Grid>
-      )}
+        <Grid item xs={6}>
+          <Typography variant="h5">{lastTimeSaved}</Typography>
+        </Grid>
+      </StyledGrid>
     </>
   );
 };

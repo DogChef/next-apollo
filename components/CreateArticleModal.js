@@ -77,7 +77,7 @@ const CreateArticleDialog = props => {
       )
       .catch(err => {
         //TODO: Add error management
-        console.log(`Error new Art: ${err}`);
+        console.log(`Error Create Article Modal: ${err}`);
       });
   };
 

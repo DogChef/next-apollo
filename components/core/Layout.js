@@ -11,7 +11,6 @@ import {
   AppBar,
   Button,
   Box,
-  CssBaseline,
   Divider,
   Drawer,
   List,
@@ -27,13 +26,14 @@ import {
   PermIdentity as ProfileIcon
 } from "@material-ui/icons";
 
-const drawerWidth = 300;
+const drawerWidth = 280;
 
 const Layout = props => {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState(props.selected);
+  const [rootPath, setRootPath] = React.useState([]);
+  const [isModalOpen, openModal] = React.useState(false);
   const [articleId, setArticleId] = React.useState(null);
+  const [selected, setSelected] = React.useState(props.selected);
 
   const FlexBox = matStyled(Box)({
     display: "flex",
@@ -50,7 +50,7 @@ const Layout = props => {
   });
 
   const ToolbarSpace = matStyled(Box)({
-    ...theme.mixins.toolbar
+    minHeight: 64
   });
 
   const StyledList = matStyled(List)({
@@ -62,12 +62,13 @@ const Layout = props => {
     background-color: ${theme.palette.background.default};
     padding: ${theme.spacing(3)}px;
     margin-top: ${theme.spacing(8)}px;
+    min-height: calc(100vh - 64px);
     ${props.mainStyles}
   `;
 
   const addSubArticle = id => {
     setArticleId(id);
-    setOpen(true);
+    openModal(true);
   };
 
   return (
@@ -77,7 +78,6 @@ const Layout = props => {
       </Head>
 
       <FlexBox>
-        <CssBaseline />
         <Header logout={logout} drawerWidth={drawerWidth} />
         <StyledDrawer variant="permanent" anchor="left">
           <ToolbarSpace />
@@ -108,7 +108,7 @@ const Layout = props => {
             <SideBarItem
               url=""
               text="Create Article"
-              onClick={() => setOpen(true)}
+              onClick={() => openModal(true)}
               selected={false}
             >
               <ListItemIcon>
@@ -130,15 +130,18 @@ const Layout = props => {
           <StyledList>
             <SideBarArticles
               selected={selected}
+              rootPath={rootPath}
               addSubArticle={addSubArticle}
             />
           </StyledList>
         </StyledDrawer>
-        <StyledMain>{props.children}</StyledMain>
+        <StyledMain>
+          {React.cloneElement(props.children, { setRootPath: setRootPath })}
+        </StyledMain>
         <ArtMod
-          open={open}
+          open={isModalOpen}
           parentId={articleId}
-          handleClose={() => setOpen(false)}
+          handleClose={() => openModal(false)}
         />
       </FlexBox>
     </>

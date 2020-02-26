@@ -150,8 +150,7 @@ const resolvers = {
       while (parent) {
         const newParent = await parent.getParent();
         if (newParent?.dataValues) {
-          const data = newParent.dataValues;
-          path.push(data.id);
+          path.push(newParent.dataValues.id);
           parent = newParent;
         } else {
           parent = null;

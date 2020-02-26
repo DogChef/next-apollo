@@ -28,6 +28,7 @@ const GET_ARTICLES = gql`
 
 const Articles = () => {
   const { loading, error, data } = useQuery(GET_ARTICLES);
+  const util = require("util");
 
   if (loading) return "Loading...";
   if (error) return `Error! ${error.message}`;
