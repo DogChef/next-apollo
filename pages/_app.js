@@ -2,10 +2,7 @@ import App from "next/app";
 import Head from "next/head";
 import { withApollo } from "../lib/apollo";
 import { ThemeProvider } from "@material-ui/core/styles";
-import { redirect } from "../lib/useAuth";
-import Layout from "../components/core/Layout";
 import theme from "./_theme";
-import Cookies from "js-cookie";
 import { CssBaseline } from "@material-ui/core";
 
 const MyApp = ({ Component, pageProps, router }) => {

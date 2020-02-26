@@ -150,14 +150,14 @@ const resolvers = {
       while (parent) {
         const newParent = await parent.getParent();
         if (newParent?.dataValues) {
-          path.push(newParent.dataValues.id);
+          path.push(`${newParent.dataValues.title}-${newParent.dataValues.id}`);
           parent = newParent;
         } else {
           parent = null;
         }
       }
 
-      return path;
+      return path.reverse();
     }
   },
   Tag: {

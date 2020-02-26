@@ -3,7 +3,6 @@
 module.exports = {
   up: (queryInterface, Sequelize) =>
     Promise.all([
-      queryInterface.bulkDelete("articles", null, {}),
       queryInterface.addColumn(
         "articles",
         "parentId",

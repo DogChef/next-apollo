@@ -12,13 +12,12 @@ const db = {};
 const route = `${process.cwd()}/pages/api/models`;
 
 fs.readdirSync(route)
-  .filter(file => {
-    return (
+  .filter(
+    file =>
       file.indexOf(".") !== 0 &&
       file !== path.basename(__filename) &&
       file.slice(-3) === ".js"
-    );
-  })
+  )
   .forEach(file => {
     const model = sequelize["import"](path.join(route, file));
     db[model.name] = model;

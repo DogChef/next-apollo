@@ -8,20 +8,18 @@ import Cookies from "js-cookie";
 import Router from "next/router";
 import { Avatar, Box, Grid, Link, Paper, Typography } from "@material-ui/core";
 
-const Copyright = () => {
-  return (
-    <Box mt={5}>
-      <Typography variant="body2" color="textSecondary" align="center">
-        {"Copyright © "}
-        <Link href="https://lithiumsoft.com/es/inicio/">
-          Lithium Software
-        </Link>{" "}
-        {new Date().getFullYear()}
-        {"."}
-      </Typography>
-    </Box>
-  );
-};
+const Copyright = () => (
+  <Box mt={5}>
+    <Typography variant="body2" color="textSecondary" align="center">
+      {"Copyright © "}
+      <Link href="https://lithiumsoft.com/es/inicio/">
+        Lithium Software
+      </Link>{" "}
+      {new Date().getFullYear()}
+      {"."}
+    </Typography>
+  </Box>
+);
 
 const Index = () => {
   const theme = useTheme();

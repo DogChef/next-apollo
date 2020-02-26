@@ -38,7 +38,7 @@ const SideBarArticles = props => {
               id={id}
               key={index}
               rootPath={
-                id === props.rootPath[props.rootPath.length - 1]
+                `${title}-${id}` === props.rootPath[0]
                   ? props.rootPath
                   : undefined
               }
