@@ -1,11 +1,17 @@
-import React, { useEffect } from "react";
-import Cookies from "js-cookie";
-import Router from "next/router";
+import React from "react";
 import UsersComponent from "../components/Users";
 import Layout from "../components/core/Layout";
 import withAuth from "../lib/withAuth";
+import { Breadcrumbs, List, Typography } from "@material-ui/core";
 
-const Users = () => <UsersComponent />;
+const Users = () => (
+  <>
+    <Breadcrumbs separator="›" aria-label="breadcrumb">
+      <Typography color="textPrimary">Users</Typography>
+    </Breadcrumbs>
+    <UsersComponent />
+  </>
+);
 
 Users.getLayout = page => (
   <Layout title="Welcome to Lotion" selected="users">

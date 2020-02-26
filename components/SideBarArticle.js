@@ -75,7 +75,7 @@ const SideBarArticle = props => {
             key={index}
             rootPath={
               props.rootPath &&
-              id === props.rootPath[props.rootPath.length - props.hierarchy - 1]
+              `${title}-${id}` === props.rootPath[props.hierarchy]
                 ? props.rootPath
                 : undefined
             }

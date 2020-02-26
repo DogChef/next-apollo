@@ -1,11 +1,18 @@
-import React, { useEffect } from "react";
-import Cookies from "js-cookie";
+import React from "react";
 import Router from "next/router";
 import ArticlesComponent from "../components/Articles";
 import Layout from "../components/core/Layout";
 import withAuth from "../lib/withAuth";
+import { Breadcrumbs, List, Typography } from "@material-ui/core";
 
-const Articles = () => <ArticlesComponent />;
+const Articles = () => (
+  <>
+    <Breadcrumbs separator="›" aria-label="breadcrumb">
+      <Typography color="textPrimary">Articles</Typography>
+    </Breadcrumbs>
+    <ArticlesComponent />
+  </>
+);
 
 Articles.getLayout = page => (
   <Layout title="View articles" selected="view_articles">

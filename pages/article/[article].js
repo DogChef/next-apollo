@@ -1,24 +1,17 @@
 import React from "react";
-import Cookies from "js-cookie";
 import Router from "next/router";
 import Layout from "../../components/core/Layout";
-import SideBarArticles from "../../components/SideBarArticles";
 import ArticleEditor from "../../components/ArticleEditor";
 import gql from "graphql-tag";
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/react-hooks";
 import { useRouter } from "next/router";
-import { makeStyles } from "@material-ui/core/styles";
-import {
-  Count,
-  HtmlEditor,
-  Image,
-  Inject,
-  Link,
-  QuickToolbar,
-  RichTextEditorComponent,
-  Toolbar
-} from "@syncfusion/ej2-react-richtexteditor";
 import withAuth from "../../lib/withAuth";
+import {
+  Breadcrumbs,
+  Typography,
+  Link,
+  styled as matStyled
+} from "@material-ui/core";
 
 const GET_ARTICLE = gql`
   query getArticle($id: ID!) {
@@ -42,6 +35,11 @@ const mainStyles = `
   flex-wrap: wrap;
 `;
 
+const StyledBreadcrumbs = matStyled(Breadcrumbs)({
+  flexGrow: 1,
+  flexBasis: "100%"
+});
+
 const Article = props => {
   const { article } = useRouter().query;
   const queryData = useQuery(GET_ARTICLE, {
@@ -55,7 +53,21 @@ const Article = props => {
   const queryArticle = queryData.data?.getArticle;
   queryArticle && props.setRootPath(queryArticle.rootPath);
 
-  return <ArticleEditor status={status} article={queryArticle} />;
+  return (
+    <>
+      {queryArticle && (
+        <StyledBreadcrumbs separator="›" aria-label="breadcrumb">
+          {queryArticle.rootPath.map((article, index) => (
+            <Link color="inherit" key={index} href={`/article/${article}`}>
+              {/(.*)\-(\d+)$/.exec(article)[1]}
+            </Link>
+          ))}
+          <Typography color="textPrimary">{queryArticle.title}</Typography>
+        </StyledBreadcrumbs>
+      )}
+      <ArticleEditor status={status} article={queryArticle} />;
+    </>
+  );
 };
 
 Article.getLayout = (page, test) => {
@@ -67,4 +79,4 @@ Article.getLayout = (page, test) => {
   );
 };
 
-export default Article;
+export default withAuth({})(Article);
