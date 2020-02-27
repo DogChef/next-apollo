@@ -135,7 +135,8 @@ const resolvers = {
     )
   },
   User: {
-    articles: user => user.getArticles()
+    articles: user => user.getArticles(),
+    favourites: user => user.getFavourites()
   },
   Article: {
     author: article => article.getAuthor(),

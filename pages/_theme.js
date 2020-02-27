@@ -1,6 +1,6 @@
 import { createMuiTheme } from "@material-ui/core/styles";
 import deepOrange from "@material-ui/core/colors/deepOrange";
-import teal from "@material-ui/core/colors/teal";
+import yellow from "@material-ui/core/colors/yellow";
 import indigo from "@material-ui/core/colors/indigo";
 
 const theme = createMuiTheme({
@@ -12,9 +12,9 @@ const theme = createMuiTheme({
       dark: indigo["700"]
     },
     secondary: {
-      light: teal["200"],
-      main: teal["500"],
-      dark: teal["700"]
+      light: yellow["200"],
+      main: yellow["500"],
+      dark: yellow["700"]
     },
     error: {
       light: deepOrange["400"],

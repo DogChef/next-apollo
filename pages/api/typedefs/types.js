@@ -6,6 +6,7 @@ const Types = `
     name: String
     email: String!
     articles: [Article]
+    favourites: [Article]
     createdAt: Date
     updatedAt: Date
   }

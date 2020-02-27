@@ -24,25 +24,40 @@ const GET_ARTICLES = gql`
   }
 `;
 
-const SideBarArticles = props => {
-  const { loading, error, data } = useQuery(GET_ARTICLES);
+const GET_FAVOURITE_ARTICLES = gql`
+  {
+    verifyUser {
+      id
+      favourites {
+        id
+        title
+        parent {
+          id
+        }
+      }
+    }
+  }
+`;
 
+const SideBarArticles = ({ isMain, addSubArticle, rootPath, selected }) => {
+  const { loading, error, data } = useQuery(
+    isMain ? GET_ARTICLES : GET_FAVOURITE_ARTICLES
+  );
+
+  const articles = isMain ? data?.getArticles : data?.verifyUser?.favourites;
+  console.log(articles);
   return (
     <>
-      {data?.getArticles?.map(
+      {articles?.map(
         ({ id, title, parent }, index) =>
-          !parent && (
+          (!parent || !isMain) && (
             <SideBarArticle
-              addSubArticle={props.addSubArticle}
+              addSubArticle={addSubArticle}
               hierarchy={1}
               id={id}
               key={index}
-              rootPath={
-                `${title}-${id}` === props.rootPath[0]
-                  ? props.rootPath
-                  : undefined
-              }
-              selected={props.selected}
+              rootPath={`${title}-${id}` === rootPath[0] ? rootPath : undefined}
+              selected={selected}
             />
           )
       )}

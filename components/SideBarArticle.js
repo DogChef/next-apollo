@@ -73,6 +73,7 @@ const SideBarArticle = props => {
             hierarchy={props.hierarchy + 1}
             id={id}
             key={index}
+            // props.rootPath && props.rootPath.includes(`${title}-${id}`)
             rootPath={
               props.rootPath &&
               `${title}-${id}` === props.rootPath[props.hierarchy]
