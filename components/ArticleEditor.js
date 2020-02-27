@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
     "&.e-control .e-rte-content": {
       backgroundColor: theme.palette.background.default,
       width: "70vw !important",
-      minHeight: "74vh !important",
+      minHeight: "72vh !important",
       margin: "auto !important"
     },
 

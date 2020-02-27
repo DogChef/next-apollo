@@ -1,6 +1,6 @@
 import React from "react";
 import gql from "graphql-tag";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 import {
   Collapse,
   List,
@@ -20,11 +20,18 @@ const GET_ARTICLE = gql`
     getArticle(id: $id) {
       id
       title
+      favourited
       children {
         id
         title
       }
     }
+  }
+`;
+
+const TOGGLE_FAVOURITE = gql`
+  mutation toggleFavourite($articleId: ID!) {
+    toggleFavourite(articleId: $articleId)
   }
 `;
 
@@ -36,6 +43,8 @@ const ArticleIcon = matStyled(InsertDriveFileOutlined)({
 
 const SideBarArticle = props => {
   const [open, setOpen] = React.useState(!!props.rootPath);
+  const [isFavourite, setFavourite] = React.useState("");
+  const [toggleFavourite] = useMutation(TOGGLE_FAVOURITE);
   const { loading, error, data } = useQuery(GET_ARTICLE, {
     variables: { id: props.id }
   });
@@ -49,16 +58,33 @@ const SideBarArticle = props => {
     setOpen(!open);
   };
 
+  const toggleFavouriteAction = () => {
+    toggleFavourite({
+      variables: {
+        articleId: article?.id
+      }
+    })
+      .then(({ data: { toggleFavourite } }) => setFavourite(toggleFavourite))
+      .catch(err => {
+        //TODO: Add error management
+        console.log(`Error Toggle Favourite: ${err}`);
+      });
+  };
+
   const article = data?.getArticle;
   const titleId = `${article?.title}-${article?.id}`;
+
+  isFavourite === "" && article && setFavourite(article.favourited);
 
   return (
     <>
       <SideBarItem
         addSubArticle={() => props.addSubArticle(article?.id)}
+        favourited={isFavourite}
         hierarchy={props.hierarchy}
         selected={titleId === props.selected}
         text={article?.title}
+        toggleFavourite={toggleFavouriteAction}
         url={`/article/${titleId}`}
       >
         <StyledListItemIcon onClick={handleOpen}>

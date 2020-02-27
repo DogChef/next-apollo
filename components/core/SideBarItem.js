@@ -9,7 +9,11 @@ import {
   ExpansionPanelSummary,
   ExpansionPanelDetails
 } from "@material-ui/core";
-import { Add as AddIcon } from "@material-ui/icons";
+import {
+  Add as AddIcon,
+  StarOutlined as FavouriteIcon,
+  StarBorder as StarIcon
+} from "@material-ui/icons";
 
 const SideBarItem = props => {
   const theme = useTheme();
@@ -32,9 +36,18 @@ const SideBarItem = props => {
     paddingRight: "3px"
   });
 
+  const StyledFavourite = matStyled(FavouriteIcon)({
+    color: "#E8C200"
+  });
+
   const addSubArticle = event => {
     event.preventDefault();
     props.addSubArticle();
+  };
+
+  const toggleFavourite = event => {
+    event.preventDefault();
+    props.toggleFavourite();
   };
 
   return (
@@ -43,9 +56,14 @@ const SideBarItem = props => {
         {props.children}
         <ListItemText primary={props.text} />
         {props.addSubArticle && (
-          <StyledIcon onClick={addSubArticle}>
-            <AddIcon />
-          </StyledIcon>
+          <>
+            <StyledIcon onClick={toggleFavourite}>
+              {props.favourited ? <StyledFavourite /> : <StarIcon />}
+            </StyledIcon>
+            <StyledIcon onClick={addSubArticle}>
+              <AddIcon />
+            </StyledIcon>
+          </>
         )}
       </StyledListItem>
     </Link>

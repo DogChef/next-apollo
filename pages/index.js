@@ -53,7 +53,7 @@ const Index = () => {
 
   const StyledAvatar = matStyled(Avatar)({
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: theme.palette.error.main
   });
 
   return (

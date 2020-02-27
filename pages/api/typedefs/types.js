@@ -20,6 +20,7 @@ const Types = `
     parent: Article
     children: [Article]
     rootPath: [String]
+    favourited: Boolean
     createdAt: Date
     updatedAt: Date
   }

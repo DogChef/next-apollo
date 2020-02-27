@@ -5,6 +5,8 @@ const Mutations = `
     
     createArticle(articleInput: ArticleCreateInput!): Article
     updateArticle(articleInput: ArticleUpdateInput): Article
+    
+    toggleFavourite(articleId: ID!): Boolean
 
     createTag(tagInput: TagInput): Tag
   }

@@ -45,7 +45,7 @@ const SideBarArticles = ({ isMain, addSubArticle, rootPath, selected }) => {
   );
 
   const articles = isMain ? data?.getArticles : data?.verifyUser?.favourites;
-  console.log(articles);
+
   return (
     <>
       {articles?.map(
