@@ -50,6 +50,10 @@ module.exports = (sequelize, DataTypes) => {
 
   ArticleModification.associate = function(models) {
     ArticleModification.belongsTo(models.user, { foreignKey: "userId" });
+    ArticleModification.belongsTo(models.user, {
+      foreignKey: "authorId",
+      as: "author"
+    });
     ArticleModification.belongsTo(models.article, { foreignKey: "articleId" });
   };
 

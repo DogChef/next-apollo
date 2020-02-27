@@ -2,6 +2,7 @@ import React from "react";
 import Router from "next/router";
 import Layout from "../../components/core/Layout";
 import ArticleEditor from "../../components/ArticleEditor";
+import ArticleModifications from "../../components/ArticleModifications";
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
 import { useRouter } from "next/router";
@@ -46,8 +47,15 @@ const mainStyles = `
 
 const StyledBreadcrumbs = matStyled(Breadcrumbs)({
   flexGrow: 1,
-  flexBasis: "100%",
+  flexBasis: "80%",
   marginBottom: "10px"
+});
+
+const StyledButton = matStyled(Button)({
+  flexGrow: 1,
+  flexBasis: "20%",
+  marginBottom: "10px",
+  float: "right"
 });
 
 const Article = props => {
@@ -79,16 +87,18 @@ const Article = props => {
   return (
     <>
       {queryArticle && (
-        <StyledBreadcrumbs separator="›" aria-label="breadcrumb">
-          {queryArticle.rootPath.map((article, index) => (
-            <Link color="inherit" key={index} href={`/article/${article}`}>
-              {/(.*)\-(\d+)$/.exec(article)[1]}
-            </Link>
-          ))}
-          <Typography color="textPrimary">{queryArticle.title}</Typography>
-        </StyledBreadcrumbs>
+        <>
+          <StyledBreadcrumbs separator="›" aria-label="breadcrumb">
+            {queryArticle.rootPath.map((article, index) => (
+              <Link color="inherit" key={index} href={`/article/${article}`}>
+                {/(.*)\-(\d+)$/.exec(article)[1]}
+              </Link>
+            ))}
+            <Typography color="textPrimary">{queryArticle.title}</Typography>
+          </StyledBreadcrumbs>
+          <StyledButton onClick={toggleDrawer(true)}>Open History</StyledButton>
+        </>
       )}
-      <Button onClick={toggleDrawer(true)}>Open History</Button>
       <ArticleEditor status={status} article={queryArticle} />;
       <SwipeableDrawer
         anchor="right"
@@ -96,33 +106,7 @@ const Article = props => {
         onClose={toggleDrawer(false)}
         onOpen={toggleDrawer(true)}
       >
-        <div
-          role="presentation"
-          onClick={toggleDrawer(false)}
-          onKeyDown={toggleDrawer(false)}
-        >
-          <List>
-            {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
-          <Divider />
-          <List>
-            {["All mail", "Trash", "Spam"].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
-        </div>
+        <ArticleModifications id={queryArticle?.id} />
       </SwipeableDrawer>
     </>
   );

@@ -73,6 +73,11 @@ const resolvers = {
       db.article.findAll()
     ),
 
+    getArticleModifications: authenticated(
+      (parent, { id }, { dataSources: { db } }) =>
+        db.articleModification.findAll({ where: { articleId: id } })
+    ),
+
     getTag: (parent, { id }, { dataSources: { db } }) => db.tag.findByPk(id),
     getTags: (parent, args, { dataSources: { db } }) => db.tag.findAll()
   },
@@ -215,6 +220,10 @@ const resolvers = {
 
       return path.reverse();
     }
+  },
+  ArticleModification: {
+    user: articleModification => articleModification.getUser(),
+    author: articleModification => articleModification.getAuthor()
   },
   Tag: {
     articles: tag => tag.getArticles()
