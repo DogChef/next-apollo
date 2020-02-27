@@ -48,6 +48,10 @@ module.exports = (sequelize, DataTypes) => {
       through: "articleTags",
       foreignKey: "articleId"
     });
+    Article.belongsToMany(models.user, {
+      through: "favouriteArticles",
+      foreignKey: "articleId"
+    });
   };
 
   return Article;

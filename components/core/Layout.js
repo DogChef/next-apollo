@@ -1,23 +1,12 @@
 import React from "react";
 import Head from "next/head";
-import ArtMod from "../CreateArticleModal";
-import SideBarArticles from "../SideBarArticles";
 import Header from "./Header";
-import SideBarItem from "./SideBarItem";
+import ArtMod from "../CreateArticleModal";
+import SideBar, { drawerWidth } from "./SideBar";
 import { logout } from "../../lib/useAuth";
 import styled from "styled-components";
 import { styled as matStyled, useTheme } from "@material-ui/core/styles";
-import {
-  AppBar,
-  Button,
-  Box,
-  Divider,
-  Drawer,
-  List,
-  ListItemIcon,
-  Toolbar,
-  Typography
-} from "@material-ui/core";
+import { AppBar, Button, Box, Toolbar, Typography } from "@material-ui/core";
 
 import {
   SupervisedUserCircle as UserIcon,
@@ -25,8 +14,6 @@ import {
   Create as CreateIcon,
   PermIdentity as ProfileIcon
 } from "@material-ui/icons";
-
-const drawerWidth = 280;
 
 const Layout = props => {
   const theme = useTheme();
@@ -38,23 +25,6 @@ const Layout = props => {
   const FlexBox = matStyled(Box)({
     display: "flex",
     flexGrow: 1
-  });
-
-  const LogOutButton = matStyled(Button)({
-    marginRight: theme.spacing(2)
-  });
-
-  const StyledDrawer = matStyled(Drawer)({
-    width: drawerWidth,
-    flexShrink: 0
-  });
-
-  const ToolbarSpace = matStyled(Box)({
-    minHeight: 64
-  });
-
-  const StyledList = matStyled(List)({
-    width: drawerWidth
   });
 
   const StyledMain = styled.main`
@@ -79,62 +49,15 @@ const Layout = props => {
 
       <FlexBox>
         <Header logout={logout} drawerWidth={drawerWidth} />
-        <StyledDrawer variant="permanent" anchor="left">
-          <ToolbarSpace />
-          <StyledList>
-            <SideBarItem
-              url="/profile"
-              text="Profile"
-              selected={"profile" === selected}
-              onClick={() => setSelected("profile")}
-            >
-              <ListItemIcon>
-                <ProfileIcon />
-              </ListItemIcon>
-            </SideBarItem>
-            <SideBarItem
-              url="/users"
-              text="Users"
-              selected={"users" === selected}
-              onClick={() => setSelected("users")}
-            >
-              <ListItemIcon>
-                <UserIcon />
-              </ListItemIcon>
-            </SideBarItem>
-          </StyledList>
-          <Divider />
-          <StyledList>
-            <SideBarItem
-              url=""
-              text="Create Article"
-              onClick={() => openModal(true)}
-              selected={false}
-            >
-              <ListItemIcon>
-                <CreateIcon />
-              </ListItemIcon>
-            </SideBarItem>
-            <SideBarItem
-              url="/articles"
-              text="View articles"
-              selected={"view_articles" === selected}
-              onClick={() => setSelected("view_articles")}
-            >
-              <ListItemIcon>
-                <ViewIcon />
-              </ListItemIcon>
-            </SideBarItem>
-          </StyledList>
-          <Divider />
-          <StyledList>
-            <SideBarArticles
-              selected={selected}
-              rootPath={rootPath}
-              addSubArticle={addSubArticle}
-            />
-          </StyledList>
-        </StyledDrawer>
+
+        <SideBar
+          selected={selected}
+          setSelected={setSelected}
+          rootPath={rootPath}
+          addSubArticle={addSubArticle}
+          openModal={openModal}
+        />
+
         <StyledMain>
           {React.cloneElement(props.children, { setRootPath: setRootPath })}
         </StyledMain>

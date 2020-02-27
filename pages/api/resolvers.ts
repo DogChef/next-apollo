@@ -132,16 +132,38 @@ const resolvers = {
           .catch(err => {
             throw new ApolloError(err);
           })
+    ),
+    toggleFavourite: authenticated(
+      (parent, { articleId }, { dataSources: { db }, currentUserId }) =>
+        db.favouriteArticle
+          .findOne({ where: { userId: currentUserId, articleId: articleId } })
+          .then(favouriteArticle => {
+            if (favouriteArticle) {
+              favouriteArticle.destroy();
+              return false;
+            } else {
+              db.favouriteArticle.create({
+                userId: currentUserId,
+                articleId: articleId
+              });
+              return true;
+            }
+          })
     )
   },
   User: {
-    articles: user => user.getArticles()
+    articles: user => user.getArticles(),
+    favourites: user => user.getFavourites()
   },
   Article: {
     author: article => article.getAuthor(),
     tags: article => article.getTags(),
     parent: article => article.getParent(),
     children: article => article.getChildren(),
+    favourited: (article, args, { dataSources: { db }, currentUserId }) =>
+      db.favouriteArticle
+        .findOne({ where: { userId: currentUserId, articleId: article.id } })
+        .then(favouriteArticle => !!favouriteArticle),
     rootPath: async article => {
       const path = [];
 

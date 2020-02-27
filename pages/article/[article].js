@@ -37,7 +37,8 @@ const mainStyles = `
 
 const StyledBreadcrumbs = matStyled(Breadcrumbs)({
   flexGrow: 1,
-  flexBasis: "100%"
+  flexBasis: "100%",
+  marginBottom: "10px"
 });
 
 const Article = props => {

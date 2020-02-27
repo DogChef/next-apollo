@@ -6,6 +6,7 @@ const Types = `
     name: String
     email: String!
     articles: [Article]
+    favourites: [Article]
     createdAt: Date
     updatedAt: Date
   }
@@ -19,6 +20,7 @@ const Types = `
     parent: Article
     children: [Article]
     rootPath: [String]
+    favourited: Boolean
     createdAt: Date
     updatedAt: Date
   }
