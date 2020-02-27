@@ -1,25 +1,28 @@
 import React from "react";
 import Link from "next/link";
 import { styled as matStyled, useTheme } from "@material-ui/core/styles";
-import {
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails
-} from "@material-ui/core";
+import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import {
   Add as AddIcon,
   StarOutlined as FavouriteIcon,
   StarBorder as StarIcon
 } from "@material-ui/icons";
 
-const SideBarItem = props => {
+const SideBarItem = ({
+  hierarchy,
+  addSubArticle,
+  toggleFavourite,
+  url,
+  selected,
+  onClick,
+  children,
+  text,
+  favourited
+}) => {
   const theme = useTheme();
 
   const StyledListItem = matStyled(ListItem)({
-    paddingLeft: theme.spacing(1 + props.hierarchy),
+    paddingLeft: theme.spacing(1 + hierarchy),
 
     "&.Mui-selected .MuiListItemText-primary": {
       fontWeight: 600,
@@ -40,27 +43,27 @@ const SideBarItem = props => {
     color: "#E8C200"
   });
 
-  const addSubArticle = event => {
+  const addSubArticleTrigger = event => {
     event.preventDefault();
-    props.addSubArticle();
+    addSubArticle();
   };
 
-  const toggleFavourite = event => {
+  const toggleFavouriteTrigger = event => {
     event.preventDefault();
-    props.toggleFavourite();
+    toggleFavourite();
   };
 
   return (
-    <Link href={props.url}>
-      <StyledListItem button selected={props.selected} onClick={props.onClick}>
-        {props.children}
-        <ListItemText primary={props.text} />
-        {props.addSubArticle && (
+    <Link href={url}>
+      <StyledListItem button selected={selected} onClick={onClick}>
+        {children}
+        <ListItemText primary={text} />
+        {addSubArticle && (
           <>
-            <StyledIcon onClick={toggleFavourite}>
-              {props.favourited ? <StyledFavourite /> : <StarIcon />}
+            <StyledIcon onClick={toggleFavouriteTrigger}>
+              {favourited ? <StyledFavourite /> : <StarIcon />}
             </StyledIcon>
-            <StyledIcon onClick={addSubArticle}>
+            <StyledIcon onClick={addSubArticleTrigger}>
               <AddIcon />
             </StyledIcon>
           </>

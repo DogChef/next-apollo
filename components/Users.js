@@ -1,7 +1,7 @@
 import React from "react";
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
-import { List, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 
 const GET_USERS = gql`
   {

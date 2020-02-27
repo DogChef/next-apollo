@@ -8,7 +8,6 @@ import {
   styled as matStyled,
   useTheme
 } from "@material-ui/core";
-
 import {
   ChevronRight as ShowMoreIcon,
   ExpandLess as ShowLessIcon,
@@ -18,9 +17,9 @@ import {
   FormatAlignJustify as BodyIcon
 } from "@material-ui/icons";
 
-const ArticleModification = props => {
+const ArticleModification = ({ authorTime, author, title, body, rootPath }) => {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(!!props.rootPath);
+  const [open, setOpen] = React.useState(!!rootPath);
 
   const StyledListItem = matStyled(ListItem)({
     paddingLeft: theme.spacing(2)
@@ -49,7 +48,7 @@ const ArticleModification = props => {
         <StyledListItemIcon>
           <EditIcon />
         </StyledListItemIcon>
-        <ListItemText primary={props.authorTime} />
+        <ListItemText primary={authorTime} />
         <StyledListItemIcon onClick={() => setOpen(!open)}>
           {open ? <ShowLessIcon /> : <ShowMoreIcon />}
         </StyledListItemIcon>
@@ -59,19 +58,19 @@ const ArticleModification = props => {
           <StyledListItemIcon>
             <AuthorIcon />
           </StyledListItemIcon>
-          <ListItemText primary={`Author: ${props.author.name}`} />
+          <ListItemText primary={`Author: ${author.name}`} />
         </StyledSubListItem>
         <StyledSubListItem>
           <StyledListItemIcon>
             <TitleIcon />
           </StyledListItemIcon>
-          <ListItemText primary={`Title: ${props.title}`} />
+          <ListItemText primary={`Title: ${title}`} />
         </StyledSubListItem>
         <StyledSubListItem>
           <StyledListItemIcon>
             <BodyIcon />
           </StyledListItemIcon>
-          <StyledBox dangerouslySetInnerHTML={{ __html: props.body }} />
+          <StyledBox dangerouslySetInnerHTML={{ __html: body }} />
         </StyledSubListItem>
       </Collapse>
     </>
