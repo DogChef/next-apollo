@@ -1,26 +1,17 @@
 import React from "react";
 import Head from "next/head";
 import Header from "./Header";
+import SideBar from "./SideBar";
 import ArtMod from "../CreateArticleModal";
-import SideBar, { drawerWidth } from "./SideBar";
-import { logout } from "../../lib/useAuth";
 import styled from "styled-components";
-import { styled as matStyled, useTheme } from "@material-ui/core/styles";
-import { AppBar, Button, Box, Toolbar, Typography } from "@material-ui/core";
+import { Box, styled as matStyled, useTheme } from "@material-ui/core";
 
-import {
-  SupervisedUserCircle as UserIcon,
-  ChromeReaderMode as ViewIcon,
-  Create as CreateIcon,
-  PermIdentity as ProfileIcon
-} from "@material-ui/icons";
-
-const Layout = props => {
+const Layout = ({ selected, mainStyles, title, children }) => {
   const theme = useTheme();
   const [rootPath, setRootPath] = React.useState([]);
   const [isModalOpen, openModal] = React.useState(false);
   const [articleId, setArticleId] = React.useState(null);
-  const [selected, setSelected] = React.useState(props.selected);
+  const [current, setSelected] = React.useState(selected);
 
   const FlexBox = matStyled(Box)({
     display: "flex",
@@ -33,7 +24,7 @@ const Layout = props => {
     padding: ${theme.spacing(3)}px;
     margin-top: ${theme.spacing(8)}px;
     min-height: calc(100vh - 64px);
-    ${props.mainStyles}
+    ${mainStyles}
   `;
 
   const addSubArticle = id => {
@@ -44,14 +35,14 @@ const Layout = props => {
   return (
     <>
       <Head>
-        <title>{props.title}</title>
+        <title>{title}</title>
       </Head>
 
       <FlexBox>
-        <Header logout={logout} drawerWidth={drawerWidth} />
+        <Header />
 
         <SideBar
-          selected={selected}
+          selected={current}
           setSelected={setSelected}
           rootPath={rootPath}
           addSubArticle={addSubArticle}
@@ -59,7 +50,7 @@ const Layout = props => {
         />
 
         <StyledMain>
-          {React.cloneElement(props.children, { setRootPath: setRootPath })}
+          {React.cloneElement(children, { setRootPath: setRootPath })}
         </StyledMain>
         <ArtMod
           open={isModalOpen}

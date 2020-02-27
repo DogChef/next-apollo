@@ -6,7 +6,8 @@ import {
   ListItemIcon,
   ListItemText,
   styled as matStyled,
-  useTheme
+  useTheme,
+  Typography
 } from "@material-ui/core";
 
 import {

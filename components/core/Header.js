@@ -2,8 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import { styled as matStyled, useTheme } from "@material-ui/core/styles";
 import { AppBar, Button, Box, Toolbar, Typography } from "@material-ui/core";
+import { logout } from "../../lib/useAuth";
+import { drawerWidth } from "./SideBar";
 
-const Header = props => {
+const Header = () => {
   const theme = useTheme();
 
   const StyledAppBar = matStyled(AppBar)({
@@ -12,7 +14,7 @@ const Header = props => {
   });
 
   const ImageContainer = matStyled(Box)({
-    width: props.drawerWidth,
+    width: drawerWidth,
     height: "64px"
   });
 
@@ -36,7 +38,7 @@ const Header = props => {
         <StyledTypography variant="h6" noWrap>
           Are we going to have a header?
         </StyledTypography>
-        <Button color="inherit" onClick={props.logout}>
+        <Button color="inherit" onClick={logout}>
           Log Out
         </Button>
       </Toolbar>
