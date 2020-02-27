@@ -25,6 +25,17 @@ const Types = `
     updatedAt: Date
   }
 
+  type ArticleModification {
+    id: ID!
+    articleId: ID!
+    title: String!
+    body: String
+    user: User!
+    author: User!
+    createdAt: Date
+    updatedAt: Date
+  }
+
   type Tag {
     id: ID!
     name: String!
