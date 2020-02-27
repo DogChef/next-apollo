@@ -7,11 +7,20 @@ import { useQuery } from "@apollo/react-hooks";
 import { useRouter } from "next/router";
 import withAuth from "../../lib/withAuth";
 import {
+  Button,
   Breadcrumbs,
   Typography,
   Link,
-  styled as matStyled
+  List,
+  Divider,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  styled as matStyled,
+  SwipeableDrawer
 } from "@material-ui/core";
+import InboxIcon from "@material-ui/icons/MoveToInbox";
+import MailIcon from "@material-ui/icons/Mail";
 
 const GET_ARTICLE = gql`
   query getArticle($id: ID!) {
@@ -43,9 +52,22 @@ const StyledBreadcrumbs = matStyled(Breadcrumbs)({
 
 const Article = props => {
   const { article } = useRouter().query;
+  const [openHistory, setHistorySidebar] = React.useState(false);
   const queryData = useQuery(GET_ARTICLE, {
     variables: { id: /(.*)\-(\d+)$/.exec(article)[2] }
   });
+
+  const toggleDrawer = open => event => {
+    if (
+      event &&
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+
+    setHistorySidebar(open);
+  };
 
   const status =
     (queryData.loading && "Loading...") ||
@@ -66,7 +88,42 @@ const Article = props => {
           <Typography color="textPrimary">{queryArticle.title}</Typography>
         </StyledBreadcrumbs>
       )}
+      <Button onClick={toggleDrawer(true)}>Open History</Button>
       <ArticleEditor status={status} article={queryArticle} />;
+      <SwipeableDrawer
+        anchor="right"
+        open={openHistory}
+        onClose={toggleDrawer(false)}
+        onOpen={toggleDrawer(true)}
+      >
+        <div
+          role="presentation"
+          onClick={toggleDrawer(false)}
+          onKeyDown={toggleDrawer(false)}
+        >
+          <List>
+            {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+              <ListItem button key={text}>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
+          </List>
+          <Divider />
+          <List>
+            {["All mail", "Trash", "Spam"].map((text, index) => (
+              <ListItem button key={text}>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
+          </List>
+        </div>
+      </SwipeableDrawer>
     </>
   );
 };

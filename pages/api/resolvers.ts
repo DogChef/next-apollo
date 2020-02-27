@@ -7,6 +7,7 @@ import {
 } from "apollo-server-micro";
 
 const bcrypt = require("bcrypt");
+const moment = require("moment");
 const jwt = require("jsonwebtoken");
 const secret = "supersecret";
 
@@ -126,9 +127,42 @@ const resolvers = {
       (parent, { articleInput }, { dataSources: { db }, currentUserId }) =>
         db.article
           .findByPk(articleInput.id)
-          .then(article => {
-            return article.update(articleInput);
-          })
+          .then(article =>
+            article.update(articleInput).then(updated =>
+              db.articleModification
+                .findOne({
+                  where: {
+                    userId: currentUserId,
+                    articleId: article.dataValues.id
+                  },
+                  order: [["updatedAt", "DESC"]]
+                })
+                .then(articleModification => {
+                  const updatedArticle = updated.dataValues;
+                  const updatedData = {
+                    userId: currentUserId,
+                    articleId: updatedArticle.id,
+                    title: updatedArticle.title,
+                    body: updatedArticle.body,
+                    authorId: updatedArticle.authorId
+                  };
+
+                  if (
+                    articleModification?.dataValues &&
+                    moment(articleModification.dataValues.updatedAt).isSame(
+                      moment(),
+                      "minute"
+                    )
+                  ) {
+                    articleModification.update(updatedData);
+                  } else {
+                    db.articleModification.create(updatedData);
+                  }
+
+                  return updated;
+                })
+            )
+          )
           .catch(err => {
             throw new ApolloError(err);
           })
