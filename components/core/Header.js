@@ -36,9 +36,7 @@ const Header = () => {
         <ImageContainer>
           <StyledImg src="/logo_white.png" />
         </ImageContainer>
-        <StyledTypography variant="h6" noWrap>
-          Are we going to have a header?
-        </StyledTypography>
+        <StyledTypography variant="h6" noWrap></StyledTypography>
         <Button color="inherit" onClick={logout}>
           Log Out
         </Button>
