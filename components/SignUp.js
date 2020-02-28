@@ -72,7 +72,7 @@ const SignUp = ({ changeComponent }) => {
         }) => {
           if (id) {
             Cookies.set("signedIn", true);
-            Router.push("/users");
+            Router.push("/welcome");
           }
         }
       )

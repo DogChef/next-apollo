@@ -13,7 +13,8 @@ import {
 import {
   SupervisedUserCircle as UserIcon,
   ChromeReaderMode as ViewIcon,
-  Create as CreateIcon
+  Create as CreateIcon,
+  LabelImportant as WelcomeIcon
 } from "@material-ui/icons";
 
 import TabPanel from "./TabPanel";
@@ -102,6 +103,16 @@ const SideBar = ({
           >
             <ListItemIcon>
               <CreateIcon />
+            </ListItemIcon>
+          </SideBarItem>
+          <SideBarItem
+            url="/welcome"
+            text="Welcome Article"
+            selected={"welcome" === selected}
+            onClick={() => setSelected("welcome")}
+          >
+            <ListItemIcon>
+              <WelcomeIcon />
             </ListItemIcon>
           </SideBarItem>
           <StyledDivider />

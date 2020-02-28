@@ -55,7 +55,7 @@ const StyledGrid = matStyled(Grid)({
   alignSelf: "flex-end"
 });
 
-const ArticleEditor = ({ status, article }) => {
+const ArticleEditor = ({ status, article, isFake = false }) => {
   const classes = useStyles();
   const [lastTimeSaved, savedAt] = useState("");
   const [writeArticle, { data }] = useMutation(WRITE_ARTICLE);
@@ -67,6 +67,10 @@ const ArticleEditor = ({ status, article }) => {
     savedAt(`Last update: ${moment(article.updatedAt).format("LLL")}`);
 
   const onSave = newBody => {
+    if (isFake) {
+      savedAt(`Saved at: ${moment().format("LLL")}`);
+      return;
+    }
     writeArticle({
       variables: {
         id: article.id,
