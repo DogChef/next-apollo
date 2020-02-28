@@ -1,4 +1,6 @@
 import React from "react";
+import gql from "graphql-tag";
+import { useMutation } from "@apollo/react-hooks";
 import Link from "next/link";
 import { styled as matStyled, useTheme } from "@material-ui/core/styles";
 import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
@@ -7,19 +9,57 @@ import {
   StarOutlined as FavouriteIcon,
   StarBorder as StarIcon
 } from "@material-ui/icons";
+import { useDrag, useDrop } from "react-dnd";
+
+const MOVE_ARTICLE = gql`
+  mutation moveArticle($id: ID!, $parentId: ID!) {
+    moveArticle(id: $id, parentId: $parentId)
+  }
+`;
+
+const ItemTypes = {
+  ARTICLE: "article"
+};
 
 const SideBarItem = ({
-  hierarchy,
   addSubArticle,
-  toggleFavourite,
-  url,
-  selected,
-  onClick,
   children,
+  favourited,
+  hierarchy,
+  id,
+  isDragging,
+  onClick,
+  refetch,
+  selected,
   text,
-  favourited
+  toggleFavourite,
+  url
 }) => {
   const theme = useTheme();
+  const [moveArticle] = useMutation(MOVE_ARTICLE);
+  const [{ opacity }, dragRef] = useDrag({
+    item: { id: id, type: ItemTypes.ARTICLE },
+    collect: monitor => ({
+      isDragging: !!monitor.isDragging()
+    })
+  });
+
+  const [{ isOver }, dropRef] = useDrop({
+    accept: ItemTypes.ARTICLE,
+    drop: draggedArticle => {
+      moveArticle({
+        variables: {
+          id: draggedArticle.id,
+          parentId: id
+        }
+      }).then(({ data: { moveArticle } }) => {
+        moveArticle && refetch();
+      });
+    },
+    collect: monitor => ({
+      isOver: !!monitor.isOver()
+    })
+  });
 
   const StyledListItem = matStyled(ListItem)({
     paddingLeft: theme.spacing(1 + hierarchy),
@@ -53,23 +93,46 @@ const SideBarItem = ({
     toggleFavourite();
   };
 
+  const draggable =
+    id && refetch
+      ? {
+          ref: dragRef,
+          style: { opacity: isDragging ? 0.5 : 1, cursor: "move" }
+        }
+      : "";
+
+  const droppable =
+    id && refetch
+      ? {
+          ref: dropRef,
+          style: { backgroundColor: isOver ? "#ffd600" : "transparent" }
+        }
+      : "";
+
   return (
-    <Link href={url}>
-      <StyledListItem button selected={selected} onClick={onClick}>
-        {children}
-        <ListItemText primary={text} />
-        {addSubArticle && (
-          <>
-            <StyledIcon onClick={toggleFavouriteTrigger}>
-              {favourited ? <StyledFavourite /> : <StarIcon />}
-            </StyledIcon>
-            <StyledIcon onClick={addSubArticleTrigger}>
-              <AddIcon />
-            </StyledIcon>
-          </>
-        )}
-      </StyledListItem>
-    </Link>
+    <div {...draggable}>
+      <Link href={url}>
+        <StyledListItem
+          button
+          selected={selected}
+          onClick={onClick}
+          {...droppable}
+        >
+          {children}
+          <ListItemText primary={text} />
+          {addSubArticle && (
+            <>
+              <StyledIcon onClick={toggleFavouriteTrigger}>
+                {favourited ? <StyledFavourite /> : <StarIcon />}
+              </StyledIcon>
+              <StyledIcon onClick={addSubArticleTrigger}>
+                <AddIcon />
+              </StyledIcon>
+            </>
+          )}
+        </StyledListItem>
+      </Link>
+    </div>
   );
 };
 

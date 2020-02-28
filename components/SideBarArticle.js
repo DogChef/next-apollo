@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import gql from "graphql-tag";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { Collapse, ListItemIcon, styled as matStyled } from "@material-ui/core";
@@ -37,18 +37,25 @@ const ArticleIcon = matStyled(InsertDriveFileOutlined)({
 });
 
 const SideBarArticle = ({
-  rootPath,
-  id,
   addSubArticle,
   hierarchy,
+  id,
+  mainRefetch,
+  reload,
+  rootPath,
   selected
 }) => {
   const [open, setOpen] = React.useState(!!rootPath);
   const [isFavourite, setFavourite] = React.useState("");
   const [toggleFavourite] = useMutation(TOGGLE_FAVOURITE);
-  const { loading, error, data } = useQuery(GET_ARTICLE, {
+  const { loading, error, data, refetch } = useQuery(GET_ARTICLE, {
+    fetchPolicy: "no-cache",
     variables: { id: id }
   });
+
+  useEffect(() => {
+    reload && refetch();
+  }, [reload]);
 
   const StyledListItemIcon = matStyled(ListItemIcon)({
     minWidth: "34px"
@@ -74,7 +81,6 @@ const SideBarArticle = ({
 
   const article = data?.getArticle;
   const titleId = `${article?.title}-${article?.id}`;
-
   isFavourite === "" && article && setFavourite(article.favourited);
 
   return (
@@ -83,6 +89,8 @@ const SideBarArticle = ({
         addSubArticle={() => addSubArticle(article?.id)}
         favourited={isFavourite}
         hierarchy={hierarchy}
+        id={article?.id}
+        refetch={mainRefetch}
         selected={titleId === selected}
         text={article?.title}
         toggleFavourite={toggleFavouriteAction}
@@ -100,7 +108,9 @@ const SideBarArticle = ({
             hierarchy={hierarchy + 1}
             id={id}
             key={index}
+            mainRefetch={mainRefetch}
             // rootPath && rootPath.includes(`${title}-${id}`)
+            reload={reload}
             rootPath={
               rootPath && `${title}-${id}` === rootPath[hierarchy]
                 ? rootPath

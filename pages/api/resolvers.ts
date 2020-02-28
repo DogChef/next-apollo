@@ -41,6 +41,27 @@ const authenticated = next => (root, args, context, info) => {
   return next(root, args, context, info);
 };
 
+const getRootPath = async (article, isSlug = true) => {
+  const path = [];
+
+  var parent = article.parentId ? article : null;
+
+  while (parent) {
+    const newParent = await parent.getParent();
+    if (newParent?.dataValues) {
+      const newNode = isSlug
+        ? `${newParent.dataValues.title}-${newParent.dataValues.id}`
+        : `${newParent.dataValues.id}`;
+      path.push(newNode);
+      parent = newParent;
+    } else {
+      parent = null;
+    }
+  }
+
+  return path.reverse();
+};
+
 const resolvers = {
   Date: new GraphQLScalarType({
     name: "Date",
@@ -188,6 +209,24 @@ const resolvers = {
               return true;
             }
           })
+    ),
+    moveArticle: authenticated(
+      (parent, { id, parentId }, { dataSources: { db }, currentUserId }) => {
+        if (id === parentId) return false;
+
+        return db.article.findByPk(parentId).then(parent =>
+          getRootPath(parent, false).then(rootPath => {
+            if (rootPath.includes(id)) return false;
+            return db.article.findByPk(id).then(article => {
+              console.log(article.dataValues.parentId);
+              console.log(parentId);
+              console.log(article.dataValues.parentId == parentId);
+              if (article.dataValues.parentId == parentId) return false;
+              return article.update({ parentId: parentId }).then(() => true);
+            });
+          })
+        );
+      }
     )
   },
   User: {
@@ -203,23 +242,7 @@ const resolvers = {
       db.favouriteArticle
         .findOne({ where: { userId: currentUserId, articleId: article.id } })
         .then(favouriteArticle => !!favouriteArticle),
-    rootPath: async article => {
-      const path = [];
-
-      var parent = article.parentId ? article : null;
-
-      while (parent) {
-        const newParent = await parent.getParent();
-        if (newParent?.dataValues) {
-          path.push(`${newParent.dataValues.title}-${newParent.dataValues.id}`);
-          parent = newParent;
-        } else {
-          parent = null;
-        }
-      }
-
-      return path.reverse();
-    }
+    rootPath: article => getRootPath(article).then(path => path)
   },
   ArticleModification: {
     user: articleModification => articleModification.getUser(),

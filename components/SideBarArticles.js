@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
 import { Divider, styled as matStyled } from "@material-ui/core";
@@ -34,9 +34,18 @@ const GET_FAVOURITE_ARTICLES = gql`
 `;
 
 const SideBarArticles = ({ isMain, addSubArticle, rootPath, selected }) => {
-  const { loading, error, data } = useQuery(
-    isMain ? GET_ARTICLES : GET_FAVOURITE_ARTICLES
+  const [reload, setReload] = useState(false);
+  const { loading, error, data, refetch, networkStatus } = useQuery(
+    isMain ? GET_ARTICLES : GET_FAVOURITE_ARTICLES,
+    {
+      fetchPolicy: "no-cache",
+      notifyOnNetworkStatusChange: true
+    }
   );
+
+  useEffect(() => {
+    networkStatus === 4 && setReload(new Date());
+  }, [networkStatus]);
 
   const articles = isMain ? data?.getArticles : data?.verifyUser?.favourites;
 
@@ -53,6 +62,8 @@ const SideBarArticles = ({ isMain, addSubArticle, rootPath, selected }) => {
                 rootPath={
                   `${title}-${id}` === rootPath[0] ? rootPath : undefined
                 }
+                mainRefetch={isMain && refetch}
+                reload={reload}
                 selected={selected}
               />
               {!isMain && <Divider />}
