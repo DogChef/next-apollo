@@ -22,17 +22,18 @@ const ItemTypes = {
 };
 
 const SideBarItem = ({
+  addSubArticle,
+  children,
+  favourited,
+  hierarchy,
   id,
   isDragging,
-  hierarchy,
-  addSubArticle,
-  toggleFavourite,
-  url,
-  selected,
   onClick,
-  children,
+  refetch,
+  selected,
   text,
-  favourited
+  toggleFavourite,
+  url
 }) => {
   const theme = useTheme();
   const [moveArticle] = useMutation(MOVE_ARTICLE);
@@ -51,6 +52,8 @@ const SideBarItem = ({
           id: draggedArticle.id,
           parentId: id
         }
+      }).then(({ data: { moveArticle } }) => {
+        moveArticle && refetch();
       });
     },
     collect: monitor => ({
@@ -90,16 +93,21 @@ const SideBarItem = ({
     toggleFavourite();
   };
 
-  const draggable = id
-    ? { ref: dragRef, style: { opacity: isDragging ? 0.5 : 1, cursor: "move" } }
-    : "";
+  const draggable =
+    id && refetch
+      ? {
+          ref: dragRef,
+          style: { opacity: isDragging ? 0.5 : 1, cursor: "move" }
+        }
+      : "";
 
-  const droppable = id
-    ? {
-        ref: dropRef,
-        style: { backgroundColor: isOver ? "#ffd600" : "transparent" }
-      }
-    : "";
+  const droppable =
+    id && refetch
+      ? {
+          ref: dropRef,
+          style: { backgroundColor: isOver ? "#ffd600" : "transparent" }
+        }
+      : "";
 
   return (
     <div {...draggable}>
