@@ -1,16 +1,10 @@
 import React from "react";
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
-import {
-  Collapse,
-  List,
-  ListItemIcon,
-  styled as matStyled,
-  Typography
-} from "@material-ui/core";
-import SideBarItem from "./core/SideBarItem";
-import SideBarArticle from "./SideBarArticle";
+import { Divider, styled as matStyled } from "@material-ui/core";
 import { ExpandMore as ArrowIcon } from "@material-ui/icons";
+
+import SideBarArticle from "./SideBarArticle";
 
 const GET_ARTICLES = gql`
   {
@@ -51,14 +45,18 @@ const SideBarArticles = ({ isMain, addSubArticle, rootPath, selected }) => {
       {articles?.map(
         ({ id, title, parent }, index) =>
           (!parent || !isMain) && (
-            <SideBarArticle
-              addSubArticle={addSubArticle}
-              hierarchy={1}
-              id={id}
-              key={index}
-              rootPath={`${title}-${id}` === rootPath[0] ? rootPath : undefined}
-              selected={selected}
-            />
+            <div key={index}>
+              <SideBarArticle
+                addSubArticle={addSubArticle}
+                hierarchy={1}
+                id={id}
+                rootPath={
+                  `${title}-${id}` === rootPath[0] ? rootPath : undefined
+                }
+                selected={selected}
+              />
+              {!isMain && <Divider />}
+            </div>
           )
       )}
     </>

@@ -1,19 +1,14 @@
 import React from "react";
 import gql from "graphql-tag";
 import { useQuery, useMutation } from "@apollo/react-hooks";
-import {
-  Collapse,
-  List,
-  ListItemIcon,
-  styled as matStyled,
-  Typography
-} from "@material-ui/core";
-import SideBarItem from "./core/SideBarItem";
+import { Collapse, ListItemIcon, styled as matStyled } from "@material-ui/core";
 import {
   ChevronRight as ShowMoreIcon,
   ExpandLess as ShowLessIcon,
   InsertDriveFileOutlined
 } from "@material-ui/icons";
+
+import SideBarItem from "./core/SideBarItem";
 
 const GET_ARTICLE = gql`
   query getArticle($id: ID!) {
@@ -41,12 +36,18 @@ const ArticleIcon = matStyled(InsertDriveFileOutlined)({
   marginBottom: "1px"
 });
 
-const SideBarArticle = props => {
-  const [open, setOpen] = React.useState(!!props.rootPath);
+const SideBarArticle = ({
+  rootPath,
+  id,
+  addSubArticle,
+  hierarchy,
+  selected
+}) => {
+  const [open, setOpen] = React.useState(!!rootPath);
   const [isFavourite, setFavourite] = React.useState("");
   const [toggleFavourite] = useMutation(TOGGLE_FAVOURITE);
   const { loading, error, data } = useQuery(GET_ARTICLE, {
-    variables: { id: props.id }
+    variables: { id: id }
   });
 
   const StyledListItemIcon = matStyled(ListItemIcon)({
@@ -79,10 +80,10 @@ const SideBarArticle = props => {
   return (
     <>
       <SideBarItem
-        addSubArticle={() => props.addSubArticle(article?.id)}
+        addSubArticle={() => addSubArticle(article?.id)}
         favourited={isFavourite}
-        hierarchy={props.hierarchy}
-        selected={titleId === props.selected}
+        hierarchy={hierarchy}
+        selected={titleId === selected}
         text={article?.title}
         toggleFavourite={toggleFavouriteAction}
         url={`/article/${titleId}`}
@@ -95,18 +96,17 @@ const SideBarArticle = props => {
       <Collapse in={open} timeout="auto" unmountOnExit>
         {article?.children.map(({ id, title }, index) => (
           <SideBarArticle
-            addSubArticle={props.addSubArticle}
-            hierarchy={props.hierarchy + 1}
+            addSubArticle={addSubArticle}
+            hierarchy={hierarchy + 1}
             id={id}
             key={index}
-            // props.rootPath && props.rootPath.includes(`${title}-${id}`)
+            // rootPath && rootPath.includes(`${title}-${id}`)
             rootPath={
-              props.rootPath &&
-              `${title}-${id}` === props.rootPath[props.hierarchy]
-                ? props.rootPath
+              rootPath && `${title}-${id}` === rootPath[hierarchy]
+                ? rootPath
                 : undefined
             }
-            selected={props.selected}
+            selected={selected}
           />
         ))}
       </Collapse>

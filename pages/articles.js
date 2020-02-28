@@ -1,9 +1,8 @@
 import React from "react";
-import Router from "next/router";
 import ArticlesComponent from "../components/Articles";
 import Layout from "../components/core/Layout";
 import withAuth from "../lib/withAuth";
-import { Breadcrumbs, List, Typography } from "@material-ui/core";
+import { Breadcrumbs, Typography } from "@material-ui/core";
 
 const Articles = () => (
   <>

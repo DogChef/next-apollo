@@ -1,8 +1,7 @@
 import React from "react";
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
-import List from "@material-ui/core/List";
-import Typography from "@material-ui/core/Typography";
+import { List, Typography } from "@material-ui/core";
 
 const GET_ARTICLES = gql`
   {
@@ -48,7 +47,7 @@ const Articles = () => {
           <ul key={index}>
             <li>id: {id} </li>
             <li>title: {title} </li>
-            <li>body: {util.inspect(body)} </li>
+            <li dangerouslySetInnerHTML={{ __html: `Body: ${body}` }} />
             <li>parent: {util.inspect(parent)}</li>
             <li>children: {util.inspect(children)} </li>
             <li>

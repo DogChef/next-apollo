@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography, styled as matStyled } from "@material-ui/core";
 import moment from "moment";
 import {
-  RichTextEditorComponent,
-  Inject,
   Count,
-  QuickToolbar,
-  Image,
-  Link,
   HtmlEditor,
-  Toolbar,
-  ToolbarType
+  Image,
+  Inject,
+  Link,
+  QuickToolbar,
+  RichTextEditorComponent,
+  Toolbar
 } from "@syncfusion/ej2-react-richtexteditor";
+
 import { enableRipple } from "@syncfusion/ej2-base";
 enableRipple(true);
 
@@ -47,7 +47,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const StyledTypography = matStyled(Typography)({
-  flexGrow: 1
+  flexGrow: 1,
+  flexBasis: "100%"
 });
 
 const StyledGrid = matStyled(Grid)({
@@ -56,7 +57,6 @@ const StyledGrid = matStyled(Grid)({
 
 const ArticleEditor = ({ status, article }) => {
   const classes = useStyles();
-  const [loaded, didLoad] = useState(false);
   const [lastTimeSaved, savedAt] = useState("");
   const [writeArticle, { data }] = useMutation(WRITE_ARTICLE);
 

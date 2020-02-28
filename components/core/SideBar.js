@@ -1,7 +1,4 @@
 import React from "react";
-import TabPanel from "./TabPanel";
-import SideBarItem from "./SideBarItem";
-import SideBarArticles from "../SideBarArticles";
 import { styled as matStyled, useTheme } from "@material-ui/core/styles";
 import {
   AppBar,
@@ -11,16 +8,17 @@ import {
   List,
   ListItemIcon,
   Tab,
-  Tabs,
-  Typography
+  Tabs
 } from "@material-ui/core";
-
 import {
   SupervisedUserCircle as UserIcon,
   ChromeReaderMode as ViewIcon,
-  Create as CreateIcon,
-  PermIdentity as ProfileIcon
+  Create as CreateIcon
 } from "@material-ui/icons";
+
+import TabPanel from "./TabPanel";
+import SideBarItem from "./SideBarItem";
+import SideBarArticles from "../SideBarArticles";
 
 export const drawerWidth = 280;
 
@@ -50,6 +48,10 @@ const SideBar = ({
     minWidth: 0
   });
 
+  const StyledDivider = matStyled(Divider)({
+    margin: "8px 0px"
+  });
+
   const StyledList = matStyled(List)({
     width: drawerWidth
   });
@@ -71,16 +73,6 @@ const SideBar = ({
       <TabPanel value={currentTab} index="main">
         <StyledList>
           <SideBarItem
-            url="/profile"
-            text="Profile"
-            selected={"profile" === selected}
-            onClick={() => setSelected("profile")}
-          >
-            <ListItemIcon>
-              <ProfileIcon />
-            </ListItemIcon>
-          </SideBarItem>
-          <SideBarItem
             url="/users"
             text="Users"
             selected={"users" === selected}
@@ -90,19 +82,7 @@ const SideBar = ({
               <UserIcon />
             </ListItemIcon>
           </SideBarItem>
-        </StyledList>
-        <Divider />
-        <StyledList>
-          <SideBarItem
-            url=""
-            text="Create Article"
-            onClick={() => openModal(true)}
-            selected={false}
-          >
-            <ListItemIcon>
-              <CreateIcon />
-            </ListItemIcon>
-          </SideBarItem>
+
           <SideBarItem
             url="/articles"
             text="View articles"
@@ -113,9 +93,18 @@ const SideBar = ({
               <ViewIcon />
             </ListItemIcon>
           </SideBarItem>
-        </StyledList>
-        <Divider />
-        <StyledList>
+          <StyledDivider />
+          <SideBarItem
+            url=""
+            text="Create Article"
+            onClick={() => openModal(true)}
+            selected={false}
+          >
+            <ListItemIcon>
+              <CreateIcon />
+            </ListItemIcon>
+          </SideBarItem>
+          <StyledDivider />
           <SideBarArticles
             selected={selected}
             rootPath={rootPath}

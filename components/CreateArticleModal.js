@@ -4,18 +4,12 @@ import { Formik, Form, Field } from "formik";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import {
-  Backdrop,
-  Box,
   Button,
-  Fade,
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   styled as matStyled,
   TextField,
-  Typography,
   useTheme
 } from "@material-ui/core";
 
@@ -28,7 +22,7 @@ const CREATE_ARTICLE = gql`
   }
 `;
 
-const CreateArticleDialog = props => {
+const CreateArticleDialog = ({ parentId, open, handleClose }) => {
   const theme = useTheme();
   const [createArticle, { data }] = useMutation(CREATE_ARTICLE);
 
@@ -61,7 +55,7 @@ const CreateArticleDialog = props => {
     createArticle({
       variables: {
         title: values.title,
-        parentId: props.parentId
+        parentId: parentId
       }
     })
       .then(
@@ -82,7 +76,7 @@ const CreateArticleDialog = props => {
   };
 
   return (
-    <Dialog open={props.open} onClose={props.handleClose}>
+    <Dialog open={open} onClose={handleClose}>
       <StyledTitle id="form-dialog-title">New Article</StyledTitle>
       <Formik
         initialValues={{ title: "" }}

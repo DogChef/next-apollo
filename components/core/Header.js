@@ -2,8 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import { styled as matStyled, useTheme } from "@material-ui/core/styles";
 import { AppBar, Button, Box, Toolbar, Typography } from "@material-ui/core";
-import { logout } from "../../lib/useAuth";
+
 import { drawerWidth } from "./SideBar";
+import { logout } from "../../lib/useAuth";
 
 const Header = () => {
   const theme = useTheme();

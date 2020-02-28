@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { useMutation } from "@apollo/react-hooks";
@@ -8,7 +8,6 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import Cookies from "js-cookie";
 import Router from "next/router";
 import {
-  Box,
   Button,
   Grid,
   Link as MLink,
@@ -40,7 +39,7 @@ const signupSchema = Yup.object().shape({
     .oneOf([Yup.ref("password")], "Password does not match")
 });
 
-const SignUp = props => {
+const SignUp = ({ changeComponent }) => {
   const theme = useTheme();
   const [signUpUser, { data }] = useMutation(CREATE_USER);
 
@@ -77,8 +76,8 @@ const SignUp = props => {
           }
         }
       )
-      .catch(err => {
-        const error = err?.graphQLErrors?.map(x => x?.message);
+      .catch(({ graphQLErrors }) => {
+        const error = graphQLErrors?.map(err => err?.message);
         setErrors({ email: error[0] });
       });
   };
@@ -207,10 +206,10 @@ const SignUp = props => {
               <Grid item>
                 <MLink
                   onClick={() => {
-                    props.changeComponent(true);
+                    changeComponent(true);
                   }}
                 >
-                  Already an account? Log In
+                  Already have an account? Log In
                 </MLink>
               </Grid>
             </Grid>

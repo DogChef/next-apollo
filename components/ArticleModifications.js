@@ -1,31 +1,14 @@
 import React from "react";
-import ArticleModification from "./ArticleModification";
-import SideBarItem from "./core/SideBarItem";
-import SideBarArticles from "./SideBarArticles";
-import { styled as matStyled, useTheme } from "@material-ui/core/styles";
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
-import {
-  AppBar,
-  Box,
-  Divider,
-  Drawer,
-  List,
-  ListItemIcon,
-  Tab,
-  Tabs,
-  Typography
-} from "@material-ui/core";
+import { styled as matStyled, useTheme } from "@material-ui/core/styles";
+import { Divider, List, ListItemIcon, Typography } from "@material-ui/core";
+import { PermIdentity as ProfileIcon } from "@material-ui/icons";
 import moment from "moment";
 
-import {
-  SupervisedUserCircle as UserIcon,
-  ChromeReaderMode as ViewIcon,
-  Create as CreateIcon,
-  PermIdentity as ProfileIcon
-} from "@material-ui/icons";
+import ArticleModification from "./ArticleModification";
 
-export const drawerWidth = 340;
+const drawerWidth = 340;
 
 const GET_MODIFICATIONS = gql`
   query getArticleModifications($id: ID!) {
@@ -60,11 +43,12 @@ const ArticleModifications = ({ id }) => {
     padding: "20px 0"
   });
 
+  const modificationList = data?.getArticleModifications?.reverse();
+
   return (
     <StyledList>
-      {data?.getArticleModifications
-        ?.reverse()
-        .map(({ user, title, body, author, updatedAt }, index) => (
+      {modificationList?.map(
+        ({ user, title, body, author, updatedAt }, index) => (
           <div key={index}>
             {index !== 0 && <Divider />}
             <ArticleModification
@@ -78,8 +62,9 @@ const ArticleModifications = ({ id }) => {
               </ListItemIcon>
             </ArticleModification>
           </div>
-        ))}
-      {data?.getArticleModifications.length === 0 && (
+        )
+      )}
+      {!modificationList?.length && (
         <StyledTypography>
           There are no modifications for this article
         </StyledTypography>

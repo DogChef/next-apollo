@@ -1,17 +1,18 @@
 import React from "react";
 import Head from "next/head";
+import styled from "styled-components";
+import { Box, styled as matStyled, useTheme } from "@material-ui/core";
+
 import Header from "./Header";
 import SideBar from "./SideBar";
 import ArtMod from "../CreateArticleModal";
-import styled from "styled-components";
-import { Box, styled as matStyled, useTheme } from "@material-ui/core";
 
 const Layout = ({ selected, mainStyles, title, children }) => {
   const theme = useTheme();
   const [rootPath, setRootPath] = React.useState([]);
   const [isModalOpen, openModal] = React.useState(false);
-  const [articleId, setArticleId] = React.useState(null);
   const [current, setSelected] = React.useState(selected);
+  const [newParentId, setNewParentId] = React.useState(null);
 
   const FlexBox = matStyled(Box)({
     display: "flex",
@@ -28,7 +29,7 @@ const Layout = ({ selected, mainStyles, title, children }) => {
   `;
 
   const addSubArticle = id => {
-    setArticleId(id);
+    setNewParentId(id);
     openModal(true);
   };
 
@@ -54,7 +55,7 @@ const Layout = ({ selected, mainStyles, title, children }) => {
         </StyledMain>
         <ArtMod
           open={isModalOpen}
-          parentId={articleId}
+          parentId={newParentId}
           handleClose={() => openModal(false)}
         />
       </FlexBox>

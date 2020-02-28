@@ -1,27 +1,21 @@
 import React from "react";
-import Router from "next/router";
-import Layout from "../../components/core/Layout";
-import ArticleEditor from "../../components/ArticleEditor";
-import ArticleModifications from "../../components/ArticleModifications";
+import Router, { useRouter } from "next/router";
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
-import { useRouter } from "next/router";
-import withAuth from "../../lib/withAuth";
 import {
   Button,
   Breadcrumbs,
   Typography,
   Link,
-  List,
-  Divider,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   styled as matStyled,
   SwipeableDrawer
 } from "@material-ui/core";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
+import { MoveToInbox as InboxIcon, Mail as MailIcon } from "@material-ui/icons";
+
+import Layout from "../../components/core/Layout";
+import ArticleEditor from "../../components/ArticleEditor";
+import ArticleModifications from "../../components/ArticleModifications";
+import withAuth from "../../lib/withAuth";
 
 const GET_ARTICLE = gql`
   query getArticle($id: ID!) {
@@ -55,10 +49,11 @@ const StyledButton = matStyled(Button)({
   flexGrow: 1,
   flexBasis: "20%",
   marginBottom: "10px",
-  float: "right"
+  float: "right",
+  padding: "0"
 });
 
-const Article = props => {
+const Article = ({ setRootPath }) => {
   const { article } = useRouter().query;
   const [openHistory, setHistorySidebar] = React.useState(false);
   const queryData = useQuery(GET_ARTICLE, {
@@ -82,7 +77,7 @@ const Article = props => {
     (queryData.error && `Error! ${queryData.error.message}`);
 
   const queryArticle = queryData.data?.getArticle;
-  queryArticle && props.setRootPath(queryArticle.rootPath);
+  queryArticle && setRootPath(queryArticle.rootPath);
 
   return (
     <>

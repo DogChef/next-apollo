@@ -7,7 +7,6 @@ import { Formik, Form, Field } from "formik";
 import Cookies from "js-cookie";
 import Router from "next/router";
 import {
-  Box,
   Button,
   Checkbox,
   FormControlLabel,
@@ -34,7 +33,7 @@ const loginSchema = Yup.object().shape({
   password: Yup.string().required("Required")
 });
 
-const Login = props => {
+const Login = ({ changeComponent }) => {
   const theme = useTheme();
   const [logInUser, { data }] = useMutation(LOG_IN);
 
@@ -66,13 +65,11 @@ const Login = props => {
         }) => {
           Cookies.set("signedIn", "true");
 
-          if (id) {
-            Router.push("/users");
-          }
+          if (id) Router.push("/users");
         }
       )
-      .catch(err => {
-        const error = err.graphQLErrors.map(x => x.message);
+      .catch(({ graphQLErrors }) => {
+        const error = graphQLErrors?.map(err => err?.message);
         setErrors({ email: " ", password: error[0] });
       });
   };
@@ -156,7 +153,7 @@ const Login = props => {
               <Grid item>
                 <MLink
                   onClick={() => {
-                    props.changeComponent(false);
+                    changeComponent(false);
                   }}
                 >
                   Don't have an account? Sign Up
