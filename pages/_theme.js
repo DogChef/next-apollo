@@ -28,6 +28,13 @@ const theme = createMuiTheme({
       main: deepOrange["600"],
       dark: deepOrange["800"]
     }
+  },
+  overrides: {
+    MuiAutocomplete: {
+      inputRoot: {
+        background: "white"
+      }
+    }
   }
 });
 

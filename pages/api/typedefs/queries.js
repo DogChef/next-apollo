@@ -12,6 +12,8 @@ const Queries = `
     getArticles: [Article]
 
     getArticleModifications(id: ID!): [ArticleModification]
+    
+    getSearchFiltered(value: String!): [String]
 
     getTag(id: ID!): Tag
     getTags: [Tag]
