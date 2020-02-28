@@ -188,6 +188,13 @@ const resolvers = {
               return true;
             }
           })
+    ),
+    moveArticle: authenticated(
+      (parent, { id, parentId }, { dataSources: { db }, currentUserId }) =>
+        db.article.findByPk(id).then(article => {
+          article.update({ parentId: parentId });
+          return true;
+        })
     )
   },
   User: {

@@ -8,6 +8,8 @@ const Mutations = `
     
     toggleFavourite(articleId: ID!): Boolean
 
+    moveArticle(id: ID!, parentId: ID): Boolean
+    
     createTag(tagInput: TagInput): Tag
   }
 

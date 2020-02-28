@@ -4,6 +4,8 @@ import { withApollo } from "../lib/apollo";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "./_theme";
 import { CssBaseline } from "@material-ui/core";
+import { DndProvider } from "react-dnd";
+import Backend from "react-dnd-html5-backend";
 
 const MyApp = ({ Component, pageProps, router }) => {
   const getLayout = Component.getLayout || (page => page);
@@ -27,8 +29,10 @@ const MyApp = ({ Component, pageProps, router }) => {
       </Head>
 
       <ThemeProvider theme={theme}>
-        <CssBaseline />
-        {getLayout(<Component {...pageProps} />, pageProps)}
+        <DndProvider backend={Backend}>
+          <CssBaseline />
+          {getLayout(<Component {...pageProps} />, pageProps)}
+        </DndProvider>
       </ThemeProvider>
     </>
   );

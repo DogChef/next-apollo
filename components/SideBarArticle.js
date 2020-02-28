@@ -83,6 +83,7 @@ const SideBarArticle = ({
         addSubArticle={() => addSubArticle(article?.id)}
         favourited={isFavourite}
         hierarchy={hierarchy}
+        id={article?.id}
         selected={titleId === selected}
         text={article?.title}
         toggleFavourite={toggleFavouriteAction}
