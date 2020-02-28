@@ -199,8 +199,7 @@ const resolvers = {
           .findOne({ where: { userId: currentUserId, articleId: articleId } })
           .then(favouriteArticle => {
             if (favouriteArticle) {
-              favouriteArticle.destroy();
-              return false;
+              return favouriteArticle.destroy().then(() => false);
             } else {
               db.favouriteArticle.create({
                 userId: currentUserId,
@@ -218,9 +217,6 @@ const resolvers = {
           getRootPath(parent, false).then(rootPath => {
             if (rootPath.includes(id)) return false;
             return db.article.findByPk(id).then(article => {
-              console.log(article.dataValues.parentId);
-              console.log(parentId);
-              console.log(article.dataValues.parentId == parentId);
               if (article.dataValues.parentId == parentId) return false;
               return article.update({ parentId: parentId }).then(() => true);
             });

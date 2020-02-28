@@ -38,7 +38,6 @@ const SideBarArticles = ({ isMain, addSubArticle, rootPath, selected }) => {
   const { loading, error, data, refetch, networkStatus } = useQuery(
     isMain ? GET_ARTICLES : GET_FAVOURITE_ARTICLES,
     {
-      fetchPolicy: "no-cache",
       notifyOnNetworkStatusChange: true
     }
   );

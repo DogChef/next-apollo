@@ -49,7 +49,6 @@ const SideBarArticle = ({
   const [isFavourite, setFavourite] = React.useState("");
   const [toggleFavourite] = useMutation(TOGGLE_FAVOURITE);
   const { loading, error, data, refetch } = useQuery(GET_ARTICLE, {
-    fetchPolicy: "no-cache",
     variables: { id: id }
   });
 

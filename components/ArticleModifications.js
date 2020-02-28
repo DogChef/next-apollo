@@ -31,6 +31,7 @@ const GET_MODIFICATIONS = gql`
 
 const ArticleModifications = ({ id }) => {
   const { data } = useQuery(GET_MODIFICATIONS, {
+    fetchPolicy: "no-cache",
     variables: { id: id }
   });
 
