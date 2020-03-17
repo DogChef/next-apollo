@@ -1,17 +1,8 @@
 import React from "react";
-import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
 import { Typography } from "@material-ui/core";
 
-const GET_USERS = gql`
-  {
-    getUsers {
-      id
-      name
-      email
-    }
-  }
-`;
+import { GET_USERS } from "./core/users";
 
 const Users = () => {
   const { loading, error, data } = useQuery(GET_USERS);

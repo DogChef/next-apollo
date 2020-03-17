@@ -2,7 +2,6 @@ import React from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Cookies from "js-cookie";
@@ -17,13 +16,7 @@ import {
   useTheme
 } from "@material-ui/core";
 
-const CREATE_USER = gql`
-  mutation signup($name: String, $email: String!, $password: String!) {
-    signUpUser(userInput: { name: $name, email: $email, password: $password }) {
-      id
-    }
-  }
-`;
+import { CREATE_USER } from "./core/users";
 
 const signupSchema = Yup.object().shape({
   fname: Yup.string()

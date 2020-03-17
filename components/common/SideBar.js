@@ -23,6 +23,31 @@ import SideBarArticles from "../SideBarArticles";
 
 export const drawerWidth = 280;
 
+const StyledDrawer = matStyled(Drawer)({
+  width: drawerWidth,
+  flexShrink: 0
+});
+
+const ToolbarSpace = matStyled(Box)({
+  minHeight: 64
+});
+
+const StyledAppBar = matStyled(AppBar)({
+  width: drawerWidth
+});
+
+const StyledTab = matStyled(Tab)({
+  minWidth: 0
+});
+
+const StyledDivider = matStyled(Divider)({
+  margin: "8px 0px"
+});
+
+const StyledList = matStyled(List)({
+  width: drawerWidth
+});
+
 const SideBar = ({
   selected,
   setSelected,
@@ -31,31 +56,6 @@ const SideBar = ({
   openModal
 }) => {
   const [currentTab, setTab] = React.useState("main");
-
-  const StyledDrawer = matStyled(Drawer)({
-    width: drawerWidth,
-    flexShrink: 0
-  });
-
-  const ToolbarSpace = matStyled(Box)({
-    minHeight: 64
-  });
-
-  const StyledAppBar = matStyled(AppBar)({
-    width: drawerWidth
-  });
-
-  const StyledTab = matStyled(Tab)({
-    minWidth: 0
-  });
-
-  const StyledDivider = matStyled(Divider)({
-    margin: "8px 0px"
-  });
-
-  const StyledList = matStyled(List)({
-    width: drawerWidth
-  });
 
   return (
     <StyledDrawer variant="permanent" anchor="left">

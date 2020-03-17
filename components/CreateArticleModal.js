@@ -2,7 +2,6 @@ import React from "react";
 import Router from "next/router";
 import { Formik, Form, Field } from "formik";
 import { useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 import {
   Button,
   Dialog,
@@ -13,14 +12,7 @@ import {
   useTheme
 } from "@material-ui/core";
 
-const CREATE_ARTICLE = gql`
-  mutation createArticle($title: String!, $parentId: ID) {
-    createArticle(articleInput: { title: $title, parentId: $parentId }) {
-      id
-      title
-    }
-  }
-`;
+import { CREATE_ARTICLE } from "./core/articles";
 
 const CreateArticleDialog = ({ parentId, open, handleClose }) => {
   const theme = useTheme();

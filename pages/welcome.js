@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "../components/core/Layout";
+import Layout from "../components/common/Layout";
 import withAuth from "../lib/withAuth";
 import { Breadcrumbs, Typography } from "@material-ui/core";
 import ArticleEditor from "../components/ArticleEditor";

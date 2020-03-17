@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
 import { useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 import * as Yup from "yup";
 import { Formik, Form, Field } from "formik";
 import Cookies from "js-cookie";
@@ -18,13 +17,7 @@ import {
   useTheme
 } from "@material-ui/core";
 
-const LOG_IN = gql`
-  mutation login($email: String!, $password: String!) {
-    logInUser(userInput: { email: $email, password: $password }) {
-      id
-    }
-  }
-`;
+import { LOG_IN } from "./core/users";
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()

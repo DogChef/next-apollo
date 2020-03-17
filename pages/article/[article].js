@@ -1,6 +1,5 @@
 import React from "react";
 import Router, { useRouter } from "next/router";
-import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
 import {
   Button,
@@ -12,26 +11,12 @@ import {
 } from "@material-ui/core";
 import { MoveToInbox as InboxIcon, Mail as MailIcon } from "@material-ui/icons";
 
-import Layout from "../../components/core/Layout";
+import Layout from "../../components/common/Layout";
 import ArticleEditor from "../../components/ArticleEditor";
 import ArticleModifications from "../../components/ArticleModifications";
 import withAuth from "../../lib/withAuth";
 
-const GET_ARTICLE = gql`
-  query getArticle($id: ID!) {
-    getArticle(id: $id) {
-      id
-      title
-      body
-      rootPath
-      author {
-        id
-        name
-      }
-      updatedAt
-    }
-  }
-`;
+import { GET_ARTICLE_EDITABLE } from "../../components/core/articles";
 
 const mainStyles = `
   text-align: center;
@@ -56,7 +41,7 @@ const StyledButton = matStyled(Button)({
 const Article = ({ setRootPath }) => {
   const { article } = useRouter().query;
   const [openHistory, setHistorySidebar] = React.useState(false);
-  const queryData = useQuery(GET_ARTICLE, {
+  const queryData = useQuery(GET_ARTICLE_EDITABLE, {
     variables: { id: /(.*)\-(\d+)$/.exec(article)[2] }
   });
 
@@ -75,7 +60,7 @@ const Article = ({ setRootPath }) => {
   const status =
     (queryData.loading && "Loading...") ||
     (queryData.error && `Error! ${queryData.error.message}`);
-
+  console.log(queryData);
   const queryArticle = queryData.data?.getArticle;
   queryArticle && setRootPath(queryArticle.rootPath);
 

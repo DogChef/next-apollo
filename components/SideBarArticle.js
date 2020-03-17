@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import gql from "graphql-tag";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { Collapse, ListItemIcon, styled as matStyled } from "@material-ui/core";
 import {
@@ -8,27 +7,8 @@ import {
   InsertDriveFileOutlined
 } from "@material-ui/icons";
 
-import SideBarItem from "./core/SideBarItem";
-
-const GET_ARTICLE = gql`
-  query getArticle($id: ID!) {
-    getArticle(id: $id) {
-      id
-      title
-      favourited
-      children {
-        id
-        title
-      }
-    }
-  }
-`;
-
-const TOGGLE_FAVOURITE = gql`
-  mutation toggleFavourite($articleId: ID!) {
-    toggleFavourite(articleId: $articleId)
-  }
-`;
+import SideBarItem from "./common/SideBarItem";
+import { GET_ARTICLE_SIDEBAR, TOGGLE_FAVOURITE } from "./core/articles";
 
 const ArticleIcon = matStyled(InsertDriveFileOutlined)({
   fontSize: "1.2rem",
@@ -48,7 +28,7 @@ const SideBarArticle = ({
   const [open, setOpen] = React.useState(!!rootPath);
   const [isFavourite, setFavourite] = React.useState("");
   const [toggleFavourite] = useMutation(TOGGLE_FAVOURITE);
-  const { loading, error, data, refetch } = useQuery(GET_ARTICLE, {
+  const { loading, error, data, refetch } = useQuery(GET_ARTICLE_SIDEBAR, {
     variables: { id: id }
   });
 

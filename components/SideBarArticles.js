@@ -1,37 +1,10 @@
 import React, { useState, useEffect } from "react";
-import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
 import { Divider, styled as matStyled } from "@material-ui/core";
 import { ExpandMore as ArrowIcon } from "@material-ui/icons";
 
 import SideBarArticle from "./SideBarArticle";
-
-const GET_ARTICLES = gql`
-  {
-    getArticles {
-      id
-      title
-      parent {
-        id
-      }
-    }
-  }
-`;
-
-const GET_FAVOURITE_ARTICLES = gql`
-  {
-    verifyUser {
-      id
-      favourites {
-        id
-        title
-        parent {
-          id
-        }
-      }
-    }
-  }
-`;
+import { GET_ARTICLES, GET_FAVOURITE_ARTICLES } from "./core/articles";
 
 const SideBarArticles = ({ isMain, addSubArticle, rootPath, selected }) => {
   const [reload, setReload] = useState(false);

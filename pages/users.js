@@ -1,6 +1,6 @@
 import React from "react";
 import UsersComponent from "../components/Users";
-import Layout from "../components/core/Layout";
+import Layout from "../components/common/Layout";
 import withAuth from "../lib/withAuth";
 import { Breadcrumbs, Typography } from "@material-ui/core";
 

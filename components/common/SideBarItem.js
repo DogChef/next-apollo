@@ -1,5 +1,4 @@
 import React from "react";
-import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 import Link from "next/link";
 import { styled as matStyled, useTheme } from "@material-ui/core/styles";
@@ -11,15 +10,20 @@ import {
 } from "@material-ui/icons";
 import { useDrag, useDrop } from "react-dnd";
 
-const MOVE_ARTICLE = gql`
-  mutation moveArticle($id: ID!, $parentId: ID!) {
-    moveArticle(id: $id, parentId: $parentId)
-  }
-`;
+import { MOVE_ARTICLE } from "../core/articles";
 
 const ItemTypes = {
   ARTICLE: "article"
 };
+
+const StyledIcon = matStyled(ListItemIcon)({
+  minWidth: 0,
+  paddingRight: "3px"
+});
+
+const StyledFavourite = matStyled(FavouriteIcon)({
+  color: "#E8C200"
+});
 
 const SideBarItem = ({
   addSubArticle,
@@ -61,28 +65,6 @@ const SideBarItem = ({
     })
   });
 
-  const StyledListItem = matStyled(ListItem)({
-    paddingLeft: theme.spacing(1 + hierarchy),
-
-    "&.Mui-selected .MuiListItemText-primary": {
-      fontWeight: 600,
-      color: `${theme.palette.primary.dark}`
-    },
-
-    "&.Mui-selected .MuiListItemIcon-root": {
-      color: `${theme.palette.primary.dark} !important`
-    }
-  });
-
-  const StyledIcon = matStyled(ListItemIcon)({
-    minWidth: 0,
-    paddingRight: "3px"
-  });
-
-  const StyledFavourite = matStyled(FavouriteIcon)({
-    color: "#E8C200"
-  });
-
   const addSubArticleTrigger = event => {
     event.preventDefault();
     addSubArticle();
@@ -109,17 +91,31 @@ const SideBarItem = ({
         }
       : "";
 
+  const styledListItem = {
+    paddingLeft: theme.spacing(1 + hierarchy),
+
+    "&.MuiSelected .MuiListItemTextPrimary": {
+      fontWeight: 600,
+      color: `${theme.palette.primary.dark}`
+    },
+
+    "&.MuiSelected .MuiListItemIconRoot": {
+      color: `${theme.palette.primary.dark} !important`
+    }
+  };
+
   return (
     <div {...draggable}>
       <Link href={url}>
-        <StyledListItem
+        <ListItem
           button
           selected={selected}
           onClick={onClick}
+          style={styledListItem}
           {...droppable}
         >
           {children}
-          <ListItemText primary={text} />
+          <ListItemText primary={text} title={text} />
           {addSubArticle && (
             <>
               <StyledIcon onClick={toggleFavouriteTrigger}>
@@ -130,7 +126,7 @@ const SideBarItem = ({
               </StyledIcon>
             </>
           )}
-        </StyledListItem>
+        </ListItem>
       </Link>
     </div>
   );

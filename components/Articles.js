@@ -1,32 +1,10 @@
 import React from "react";
-import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
 import { List, Typography } from "@material-ui/core";
-
-const GET_ARTICLES = gql`
-  {
-    getArticles {
-      id
-      title
-      body
-      parent {
-        id
-        title
-      }
-      children {
-        id
-        title
-      }
-      author {
-        id
-        name
-      }
-    }
-  }
-`;
+import { GET_ARTICLES_INDEX } from "./core/articles";
 
 const Articles = () => {
-  const { loading, error, data } = useQuery(GET_ARTICLES);
+  const { loading, error, data } = useQuery(GET_ARTICLES_INDEX);
   const util = require("util");
 
   if (loading) return "Loading...";

@@ -7,6 +7,11 @@ import Header from "./Header";
 import SideBar from "./SideBar";
 import ArtMod from "../CreateArticleModal";
 
+const FlexBox = matStyled(Box)({
+  display: "flex",
+  flexGrow: 1
+});
+
 const Layout = ({ selected, mainStyles, title, children }) => {
   const theme = useTheme();
   const [rootPath, setRootPath] = React.useState([]);
@@ -14,19 +19,14 @@ const Layout = ({ selected, mainStyles, title, children }) => {
   const [current, setSelected] = React.useState(selected);
   const [newParentId, setNewParentId] = React.useState(null);
 
-  const FlexBox = matStyled(Box)({
-    display: "flex",
-    flexGrow: 1
-  });
-
-  const StyledMain = styled.main`
-    flex-grow: 1;
-    background-color: ${theme.palette.background.default};
-    padding: ${theme.spacing(3)}px;
-    margin-top: ${theme.spacing(8)}px;
-    min-height: calc(100vh - 64px);
-    ${mainStyles}
-  `;
+  const styledMain = {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.default,
+    padding: theme.spacing(3),
+    marginTop: theme.spacing(8),
+    minHeight: "calc(100vh - 64px)",
+    ...mainStyles
+  };
 
   const addSubArticle = id => {
     setNewParentId(id);
@@ -50,9 +50,9 @@ const Layout = ({ selected, mainStyles, title, children }) => {
           openModal={openModal}
         />
 
-        <StyledMain>
+        <main style={styledMain}>
           {React.cloneElement(children, { setRootPath: setRootPath })}
-        </StyledMain>
+        </main>
         <ArtMod
           open={isModalOpen}
           parentId={newParentId}

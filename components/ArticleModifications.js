@@ -1,5 +1,4 @@
 import React from "react";
-import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
 import { styled as matStyled, useTheme } from "@material-ui/core/styles";
 import { Divider, List, ListItemIcon, Typography } from "@material-ui/core";
@@ -7,27 +6,9 @@ import { PermIdentity as ProfileIcon } from "@material-ui/icons";
 import moment from "moment";
 
 import ArticleModification from "./ArticleModification";
+import { GET_MODIFICATIONS } from "./core/article_modifications";
 
 const drawerWidth = 340;
-
-const GET_MODIFICATIONS = gql`
-  query getArticleModifications($id: ID!) {
-    getArticleModifications(id: $id) {
-      id
-      user {
-        id
-        name
-      }
-      title
-      body
-      author {
-        id
-        name
-      }
-      updatedAt
-    }
-  }
-`;
 
 const ArticleModifications = ({ id }) => {
   const { data } = useQuery(GET_MODIFICATIONS, {

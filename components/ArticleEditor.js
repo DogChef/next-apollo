@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography, styled as matStyled } from "@material-ui/core";
@@ -18,13 +17,7 @@ import {
 import { enableRipple } from "@syncfusion/ej2-base";
 enableRipple(true);
 
-const WRITE_ARTICLE = gql`
-  mutation writeArticle($id: ID, $title: String, $body: String) {
-    updateArticle(articleInput: { id: $id, title: $title, body: $body }) {
-      updatedAt
-    }
-  }
-`;
+import { WRITE_ARTICLE } from "./core/articles";
 
 const useStyles = makeStyles(theme => ({
   editor: {
