@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         allowNull: false
       },
-      name: {
+      username: {
         type: DataTypes.STRING,
         allowNull: true,
         validate: {
@@ -21,6 +21,11 @@ module.exports = (sequelize, DataTypes) => {
             msg: "Name must be between 4 and 12 characters long."
           }
         }
+      },
+      role: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        values: ["USER", "ADMIN"]
       },
       email: {
         type: DataTypes.STRING,
@@ -52,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = function(models) {
     User.hasMany(models.article, { foreignKey: "authorId", as: "articles" });
     User.belongsToMany(models.article, {
-      through: "favouriteArticles",
+      through: "favourite_articles",
       foreignKey: "userId",
       as: "favourites"
     });

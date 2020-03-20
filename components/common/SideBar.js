@@ -74,28 +74,6 @@ const SideBar = ({
       <TabPanel value={currentTab} index="main">
         <StyledList>
           <SideBarItem
-            url="/users"
-            text="Users"
-            selected={"users" === selected}
-            onClick={() => setSelected("users")}
-          >
-            <ListItemIcon>
-              <UserIcon />
-            </ListItemIcon>
-          </SideBarItem>
-
-          <SideBarItem
-            url="/articles"
-            text="View articles"
-            selected={"view_articles" === selected}
-            onClick={() => setSelected("view_articles")}
-          >
-            <ListItemIcon>
-              <ViewIcon />
-            </ListItemIcon>
-          </SideBarItem>
-          <StyledDivider />
-          <SideBarItem
             url=""
             text="Create Article"
             onClick={() => openModal(true)}

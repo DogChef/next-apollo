@@ -44,11 +44,11 @@ const fakeArticle = {
   }
 };
 
-const mainStyles = `
-  text-align: center;
-  display: flex;
-  flex-wrap: wrap;
-`;
+const mainStyles = {
+  textAlign: "center",
+  display: "flex",
+  flexWrap: "wrap"
+};
 
 const Welcome = () => (
   <>

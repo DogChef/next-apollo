@@ -17,6 +17,10 @@ module.exports = {
               type: Sequelize.STRING,
               allowNull: false
             },
+            icon: {
+              type: Sequelize.STRING,
+              allowNull: true
+            },
             body: {
               type: Sequelize.TEXT,
               allowNull: true
@@ -53,7 +57,7 @@ module.exports = {
           { transaction: t }
         ),
         queryInterface.createTable(
-          "articleTags",
+          "article_tags",
           {
             id: {
               type: Sequelize.INTEGER,
@@ -89,7 +93,7 @@ module.exports = {
   down: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction(t => {
       return Promise.all([
-        queryInterface.dropTable("articleTags", { transaction: t }),
+        queryInterface.dropTable("article_tags", { transaction: t }),
         queryInterface.dropTable("articles", { transaction: t }),
         queryInterface.dropTable("tags", { transaction: t })
       ]);

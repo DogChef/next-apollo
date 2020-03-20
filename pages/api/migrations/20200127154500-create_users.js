@@ -10,9 +10,10 @@ module.exports = {
         autoIncrement: true,
         allowNull: false
       },
-      name: {
+      username: {
         type: Sequelize.STRING,
         allowNull: true,
+        unique: true,
         validate: {
           len: {
             args: [4, 12],
@@ -20,8 +21,11 @@ module.exports = {
           }
         }
       },
-      createdAt: Sequelize.DATE,
-      updatedAt: Sequelize.DATE
+      role: {
+        type: Sequelize.ENUM,
+        allowNull: false,
+        values: ["USER", "ADMIN"]
+      }
     });
   },
   down: (queryInterface, Sequelize) => {

@@ -10,7 +10,7 @@ import {
 } from "@material-ui/icons";
 import { useDrag, useDrop } from "react-dnd";
 
-import { MOVE_ARTICLE } from "../core/articles";
+import { MOVE_ARTICLE } from "../core/mutations";
 
 const ItemTypes = {
   ARTICLE: "article"
@@ -29,7 +29,7 @@ const SideBarItem = ({
   addSubArticle,
   children,
   favourited,
-  hierarchy,
+  hierarchy = 0,
   id,
   isDragging,
   onClick,

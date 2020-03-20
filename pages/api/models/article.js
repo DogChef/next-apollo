@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false
       },
+      icon: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
       body: {
         type: DataTypes.TEXT,
         allowNull: true
@@ -42,14 +46,24 @@ module.exports = (sequelize, DataTypes) => {
 
   Article.associate = function(models) {
     Article.belongsTo(models.user, { foreignKey: "authorId", as: "author" });
-    Article.belongsTo(models.article, { foreignKey: "parentId", as: "parent" });
-    Article.hasMany(models.article, { foreignKey: "parentId", as: "Children" });
+    Article.belongsTo(models.article, {
+      foreignKey: "parentId",
+      as: "parent"
+    });
+    Article.hasMany(models.article, {
+      foreignKey: "parentId",
+      as: "children"
+    });
+    Article.hasMany(models.article_modification, {
+      foreignKey: "articleId",
+      as: "modifications"
+    });
     Article.belongsToMany(models.tag, {
-      through: "articleTags",
+      through: "article_tags",
       foreignKey: "articleId"
     });
     Article.belongsToMany(models.user, {
-      through: "favouriteArticles",
+      through: "favourite_articles",
       foreignKey: "articleId"
     });
   };

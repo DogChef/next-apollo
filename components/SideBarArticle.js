@@ -8,12 +8,17 @@ import {
 } from "@material-ui/icons";
 
 import SideBarItem from "./common/SideBarItem";
-import { GET_ARTICLE_SIDEBAR, TOGGLE_FAVOURITE } from "./core/articles";
+import { TOGGLE_FAVOURITE } from "./core/mutations";
+import { GET_SIDEBAR_ARTICLE } from "./core/queries";
 
 const ArticleIcon = matStyled(InsertDriveFileOutlined)({
   fontSize: "1.2rem",
   marginRight: "4px",
   marginBottom: "1px"
+});
+
+const StyledListItemIcon = matStyled(ListItemIcon)({
+  minWidth: "34px"
 });
 
 const SideBarArticle = ({
@@ -28,17 +33,18 @@ const SideBarArticle = ({
   const [open, setOpen] = React.useState(!!rootPath);
   const [isFavourite, setFavourite] = React.useState("");
   const [toggleFavourite] = useMutation(TOGGLE_FAVOURITE);
-  const { loading, error, data, refetch } = useQuery(GET_ARTICLE_SIDEBAR, {
-    variables: { id: id }
+  const { loading, error, data, refetch } = useQuery(GET_SIDEBAR_ARTICLE, {
+    variables: { id: id },
+    fetchPolicy: "no-cache"
   });
+
+  useEffect(() => {
+    !!rootPath && !open && setOpen(true);
+  }, [rootPath]);
 
   useEffect(() => {
     reload && refetch();
   }, [reload]);
-
-  const StyledListItemIcon = matStyled(ListItemIcon)({
-    minWidth: "34px"
-  });
 
   const handleOpen = event => {
     event.preventDefault();
@@ -51,14 +57,14 @@ const SideBarArticle = ({
         articleId: article?.id
       }
     })
-      .then(({ data: { toggleFavourite } }) => setFavourite(toggleFavourite))
+      .then(({ data: { isFavourite } }) => setFavourite(isFavourite))
       .catch(err => {
         //TODO: Add error management
         console.log(`Error Toggle Favourite: ${err}`);
       });
   };
 
-  const article = data?.getArticle;
+  const article = data?.article;
   const titleId = `${article?.title}-${article?.id}`;
   isFavourite === "" && article && setFavourite(article.favourited);
 

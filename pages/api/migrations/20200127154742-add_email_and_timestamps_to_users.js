@@ -22,7 +22,7 @@ module.exports = {
           )
           .then(data => {
             queryInterface.sequelize.query(
-              "UPDATE Users SET email = CONCAT(id, '@lithium.com') WHERE email IS NULL;",
+              `UPDATE users SET email = CONCAT(id, '@lithium.com') WHERE email IS NULL;`,
               {
                 type: QueryTypes.UPDATE
               }
@@ -57,7 +57,19 @@ module.exports = {
               type: Sequelize.STRING,
               allowNull: false
             });
-          })
+          }),
+        queryInterface.addColumn(
+          "users",
+          "createdAt",
+          { type: Sequelize.DATE },
+          { transaction: t }
+        ),
+        queryInterface.addColumn(
+          "users",
+          "updatedAt",
+          { type: Sequelize.DATE },
+          { transaction: t }
+        )
       ]);
     });
   },
@@ -65,7 +77,9 @@ module.exports = {
     return queryInterface.sequelize.transaction(t => {
       return Promise.all([
         queryInterface.removeColumn("users", "email", { transaction: t }),
-        queryInterface.removeColumn("users", "password", { transaction: t })
+        queryInterface.removeColumn("users", "password", { transaction: t }),
+        queryInterface.removeColumn("users", "createdAt", { transaction: t }),
+        queryInterface.removeColumn("users", "updatedAt", { transaction: t })
       ]);
     });
   }

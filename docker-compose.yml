@@ -4,9 +4,9 @@ services:
     image: postgres:10.3
     restart: always
     environment:
-      - POSTGRES_DB=${DB}
-      - POSTGRES_USER=${USER}
-      - POSTGRES_PASSWORD=${PW}
+      - POSTGRES_DB=lotion
+      - POSTGRES_USER=lotion
+      - POSTGRES_PASSWORD=lotion
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:

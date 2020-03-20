@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Router, { useRouter } from "next/router";
 import { useQuery } from "@apollo/react-hooks";
 import {
@@ -16,13 +16,13 @@ import ArticleEditor from "../../components/ArticleEditor";
 import ArticleModifications from "../../components/ArticleModifications";
 import withAuth from "../../lib/withAuth";
 
-import { GET_ARTICLE_EDITABLE } from "../../components/core/articles";
+import { GET_ARTICLE_EDITABLE } from "../../components/core/queries";
 
-const mainStyles = `
-  text-align: center;
-  display: flex;
-  flex-wrap: wrap;
-`;
+const mainStyles = {
+  textAlign: "center",
+  display: "flex",
+  flexWrap: "wrap"
+};
 
 const StyledBreadcrumbs = matStyled(Breadcrumbs)({
   flexGrow: 1,
@@ -40,7 +40,8 @@ const StyledButton = matStyled(Button)({
 
 const Article = ({ setRootPath }) => {
   const { article } = useRouter().query;
-  const [openHistory, setHistorySidebar] = React.useState(false);
+  const [openHistory, setHistorySidebar] = useState(false);
+  const [status, setStatus] = useState("Loading...");
   const queryData = useQuery(GET_ARTICLE_EDITABLE, {
     variables: { id: /(.*)\-(\d+)$/.exec(article)[2] }
   });
@@ -57,11 +58,13 @@ const Article = ({ setRootPath }) => {
     setHistorySidebar(open);
   };
 
-  const status =
-    (queryData.loading && "Loading...") ||
-    (queryData.error && `Error! ${queryData.error.message}`);
-  console.log(queryData);
-  const queryArticle = queryData.data?.getArticle;
+  queryData.loading && !status && setStatus("Loading...");
+  const error = `Error! ${queryData.error?.message}`;
+
+  queryData.error && status != error && setStatus(error);
+  queryData.data && status && setStatus(undefined);
+
+  const queryArticle = queryData.data?.article;
   queryArticle && setRootPath(queryArticle.rootPath);
 
   return (

@@ -1,6 +1,5 @@
 import { ApolloServer, AuthenticationError } from "apollo-server-micro";
-import resolvers from "./resolvers";
-import typeDefs from "./typeDefs";
+import { typeDefs, resolvers } from "./schema";
 import db from "./models";
 import jwt from "jsonwebtoken";
 

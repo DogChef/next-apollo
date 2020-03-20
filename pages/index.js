@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
-import { styled as matStyled, useTheme } from "@material-ui/core/styles";
+import { styled as matStyled, makeStyles } from "@material-ui/core/styles";
 import Login from "../components/Login";
 import SignUp from "../components/SignUp";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
@@ -21,40 +21,43 @@ const Copyright = () => (
   </Box>
 );
 
-const Index = () => {
-  const theme = useTheme();
-  const [isLogin, changeComponent] = useState(true);
+const RootGrid = matStyled(Grid)({
+  display: "flex",
+  height: "100vh"
+});
 
-  useEffect(() => {
-    if (Cookies.get("signedIn")) {
-      Router.push("/users");
-    }
-  }, []);
+const IndexPhoto = matStyled(Grid)({
+  backgroundImage: "url(https://source.unsplash.com/random)",
+  backgroundRepeat: "no-repeat",
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+  opacity: 1
+});
 
-  const RootGrid = matStyled(Grid)({
-    display: "flex",
-    height: "100vh"
-  });
-
-  const CenteredBox = matStyled(Box)({
+const useStyles = makeStyles(theme => ({
+  centered: {
     display: "flex",
     flexDirection: "column",
     margin: theme.spacing(8, 6),
     alignItems: "center"
-  });
+  },
 
-  const IndexPhoto = matStyled(Grid)({
-    backgroundImage: "url(https://source.unsplash.com/random)",
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    opacity: 1
-  });
-
-  const StyledAvatar = matStyled(Avatar)({
+  avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.error.main
-  });
+  }
+}));
+
+const Index = () => {
+  const [isLogin, changeComponent] = useState(true);
+
+  useEffect(() => {
+    if (Cookies.get("signedIn")) {
+      Router.push("/welcome");
+    }
+  }, []);
+
+  const classes = useStyles();
 
   return (
     !Cookies.get("signedIn") && (
@@ -74,17 +77,17 @@ const Index = () => {
             elevation={6}
             square
           >
-            <CenteredBox>
-              <StyledAvatar>
+            <Box className={classes.centered}>
+              <Avatar className={classes.avatar}>
                 <LockOutlinedIcon />
-              </StyledAvatar>
+              </Avatar>
               {isLogin ? (
                 <Login changeComponent={changeComponent} />
               ) : (
                 <SignUp changeComponent={changeComponent} />
               )}
               <Copyright />
-            </CenteredBox>
+            </Box>
           </Grid>
         </RootGrid>
       </>

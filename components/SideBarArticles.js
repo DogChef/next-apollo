@@ -4,13 +4,14 @@ import { Divider, styled as matStyled } from "@material-ui/core";
 import { ExpandMore as ArrowIcon } from "@material-ui/icons";
 
 import SideBarArticle from "./SideBarArticle";
-import { GET_ARTICLES, GET_FAVOURITE_ARTICLES } from "./core/articles";
+import { GET_ARTICLES, GET_FAVOURITE_ARTICLES } from "./core/queries";
 
 const SideBarArticles = ({ isMain, addSubArticle, rootPath, selected }) => {
   const [reload, setReload] = useState(false);
   const { loading, error, data, refetch, networkStatus } = useQuery(
     isMain ? GET_ARTICLES : GET_FAVOURITE_ARTICLES,
     {
+      fetchPolicy: "no-cache",
       notifyOnNetworkStatusChange: true
     }
   );
@@ -19,7 +20,7 @@ const SideBarArticles = ({ isMain, addSubArticle, rootPath, selected }) => {
     networkStatus === 4 && setReload(new Date());
   }, [networkStatus]);
 
-  const articles = isMain ? data?.getArticles : data?.verifyUser?.favourites;
+  const articles = isMain ? data?.articles : data?.verifiedUser?.favourites;
 
   return (
     <>

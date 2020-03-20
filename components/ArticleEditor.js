@@ -17,7 +17,7 @@ import {
 import { enableRipple } from "@syncfusion/ej2-base";
 enableRipple(true);
 
-import { WRITE_ARTICLE } from "./core/articles";
+import { UPDATE_ARTICLE } from "./core/mutations";
 
 const useStyles = makeStyles(theme => ({
   editor: {
@@ -49,9 +49,9 @@ const StyledGrid = matStyled(Grid)({
 });
 
 const ArticleEditor = ({ status, article, isFake = false }) => {
-  const classes = useStyles();
   const [lastTimeSaved, savedAt] = useState("");
-  const [writeArticle, { data }] = useMutation(WRITE_ARTICLE);
+  const [writeArticle, { data }] = useMutation(UPDATE_ARTICLE);
+  const classes = useStyles();
 
   const author = article && `Created by: ${article.author.name}`;
 
@@ -74,7 +74,7 @@ const ArticleEditor = ({ status, article, isFake = false }) => {
       .then(
         ({
           data: {
-            updateArticle: { updatedAt }
+            updatedArticle: { updatedAt }
           }
         }) => {
           savedAt(`Saved at: ${moment(updatedAt).format("LLL")}`);
@@ -90,52 +90,56 @@ const ArticleEditor = ({ status, article, isFake = false }) => {
       {article && (
         <StyledTypography variant="h3">{article.title}</StyledTypography>
       )}
-      <RichTextEditorComponent
-        id="inlineRTE"
-        change={valueTemplate => onSave(valueTemplate.value)}
-        className={classes.editor}
-        enableResize={false}
-        enableTabKey={true}
-        inlineMode={{ enable: true, onSelection: true }}
-        locale={"es-AR"}
-        readonly={status !== undefined}
-        saveInterval={300 /*miliseconds*/}
-        showCharCount={true}
-        toolbarSettings={{
-          enable: true,
+      {status ? (
+        <StyledTypography variant="h4">{status}</StyledTypography>
+      ) : (
+        <RichTextEditorComponent
+          id="inlineRTE"
+          change={valueTemplate => onSave(valueTemplate.value)}
+          className={classes.editor}
+          enableResize={false}
+          enableTabKey={true}
+          inlineMode={{ enable: true, onSelection: true }}
+          locale={"es-AR"}
+          readonly={status !== undefined}
+          saveInterval={300 /*miliseconds*/}
+          showCharCount={true}
+          toolbarSettings={{
+            enable: true,
 
-          items: [
-            "Formats",
-            "Alignments",
-            "OrderedList",
-            "UnorderedList",
-            "|",
-            "FontName",
-            "FontColor",
-            "FontSize",
-            "BackgroundColor",
-            "-",
-            "Bold",
-            "Italic",
-            "Underline",
-            "StrikeThrough",
-            "|",
-            "CreateLink",
-            "Image",
-            "|",
-            "SubScript",
-            "SuperScript",
-            "|",
-            "Print",
-            "SourceCode"
-          ]
-        }}
-        valueTemplate={status || article.body}
-      >
-        <Inject
-          services={[Image, Link, QuickToolbar, HtmlEditor, Toolbar, Count]}
-        />
-      </RichTextEditorComponent>
+            items: [
+              "Formats",
+              "Alignments",
+              "OrderedList",
+              "UnorderedList",
+              "|",
+              "FontName",
+              "FontColor",
+              "FontSize",
+              "BackgroundColor",
+              "-",
+              "Bold",
+              "Italic",
+              "Underline",
+              "StrikeThrough",
+              "|",
+              "CreateLink",
+              "Image",
+              "|",
+              "SubScript",
+              "SuperScript",
+              "|",
+              "Print",
+              "SourceCode"
+            ]
+          }}
+          valueTemplate={article.body}
+        >
+          <Inject
+            services={[Image, Link, QuickToolbar, HtmlEditor, Toolbar, Count]}
+          />
+        </RichTextEditorComponent>
+      )}
       <StyledGrid container>
         <Grid item xs={6}>
           <Typography variant="h5">{author}</Typography>

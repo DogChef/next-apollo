@@ -11,59 +11,59 @@ import {
   FormControlLabel,
   Grid,
   Link as MLink,
+  makeStyles,
   styled as matStyled,
   TextField,
-  Typography,
-  useTheme
+  Typography
 } from "@material-ui/core";
 
-import { LOG_IN } from "./core/users";
+import { LOG_IN } from "./core/mutations";
 
 const loginSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Please enter a valid email")
-    .required("Please enter an email"),
+  identifier: Yup.string().required("Please enter your identifier"),
   password: Yup.string().required("Required")
 });
 
-const Login = ({ changeComponent }) => {
-  const theme = useTheme();
-  const [logInUser, { data }] = useMutation(LOG_IN);
+const RightLabel = matStyled(FormControlLabel)({
+  float: "right"
+});
 
-  const RightLabel = matStyled(FormControlLabel)({
-    float: "right"
-  });
-
-  const StyledButton = matStyled(Button)({
+const useStyles = makeStyles(theme => ({
+  button: {
     margin: theme.spacing(3, 0, 2)
-  });
+  },
 
-  const StyledForm = matStyled(Form)({
+  form: {
     width: "100%",
     marginTop: theme.spacing(1)
-  });
+  }
+}));
+
+const Login = ({ changeComponent }) => {
+  const [logInUser, { data }] = useMutation(LOG_IN);
+  const classes = useStyles();
 
   const submition = (values, { setErrors }) => {
     logInUser({
       variables: {
-        email: values.email,
+        identifier: values.identifier,
         password: values.password
       }
     })
       .then(
         ({
           data: {
-            logInUser: { id }
+            loggedUser: { id }
           }
         }) => {
           Cookies.set("signedIn", "true");
 
-          if (id) Router.push("/users");
+          if (id) Router.push("/welcome");
         }
       )
       .catch(({ graphQLErrors }) => {
         const error = graphQLErrors?.map(err => err?.message);
-        setErrors({ email: " ", password: error[0] });
+        setErrors({ identifier: " ", password: error[0] });
       });
   };
 
@@ -77,34 +77,36 @@ const Login = ({ changeComponent }) => {
       </Typography>
 
       <Formik
-        initialValues={{ email: "", password: "" }}
+        initialValues={{ identifier: "", password: "" }}
         validationSchema={loginSchema}
         onSubmit={submition}
         validateOnBlur={false}
       >
         {({
-          values: { email, password },
+          values: { identifier, password },
           errors,
           touched,
           handleBlur,
           handleChange
         }) => (
-          <StyledForm noValidate>
+          <Form className={classes.form} noValidate>
             <Field
-              id="email"
-              type="email"
-              label="Email Address"
-              placeholder="Enter your email"
+              id="identifier"
+              type="text"
+              label="Username/Email Address"
+              placeholder="Enter your identifier"
               variant="outlined"
               margin="normal"
               autoComplete="email"
-              value={email}
+              value={identifier}
               onBlur={handleBlur}
               onChange={handleChange}
               component={TextField}
-              error={touched["email"] && errors["email"]?.length > 0}
+              error={touched["identifier"] && errors["identifier"]?.length > 0}
               helperText={
-                touched["email"] && errors["email"] !== " " && errors["email"]
+                touched["identifier"] &&
+                errors["identifier"] !== " " &&
+                errors["identifier"]
               }
               autoFocus
               fullWidth
@@ -129,14 +131,15 @@ const Login = ({ changeComponent }) => {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
-            <StyledButton
+            <Button
               type="submit"
               fullWidth
               variant="contained"
               color="primary"
+              className={classes.button}
             >
               Submit
-            </StyledButton>
+            </Button>
             <Grid container>
               <Grid item xs>
                 <Link href="#">
@@ -153,7 +156,7 @@ const Login = ({ changeComponent }) => {
                 </MLink>
               </Grid>
             </Grid>
-          </StyledForm>
+          </Form>
         )}
       </Formik>
     </>

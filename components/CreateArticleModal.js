@@ -7,41 +7,43 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  makeStyles,
   styled as matStyled,
-  TextField,
-  useTheme
+  TextField
 } from "@material-ui/core";
 
-import { CREATE_ARTICLE } from "./core/articles";
+import { CREATE_ARTICLE } from "./core/mutations";
 
-const CreateArticleDialog = ({ parentId, open, handleClose }) => {
-  const theme = useTheme();
-  const [createArticle, { data }] = useMutation(CREATE_ARTICLE);
+const StyledDialog = matStyled(Dialog)({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center"
+});
 
-  const StyledDialog = matStyled(Dialog)({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center"
-  });
+const StyledTitle = matStyled(DialogTitle)({
+  textAlign: "center"
+});
 
-  const StyledDialogContent = matStyled(DialogContent)({
+const StyledForm = matStyled(Form)({
+  width: "100%"
+});
+
+const useStyles = makeStyles(theme => ({
+  dialogContent: {
     padding: `${theme.spacing(0, 3, 3)} !important`
-  });
+  },
 
-  const StyledTitle = matStyled(DialogTitle)({
-    textAlign: "center"
-  });
-
-  const StyledForm = matStyled(Form)({
-    width: "100%"
-  });
-
-  const StyledButton = matStyled(Button)({
+  button: {
     margin: theme.spacing(3, 0, 2),
     float: "right",
     width: "40%",
     margin: "0px"
-  });
+  }
+}));
+
+const CreateArticleDialog = ({ parentId, open, handleClose }) => {
+  const [createArticle, { data }] = useMutation(CREATE_ARTICLE);
+  const classes = useStyles();
 
   const submition = values => {
     createArticle({
@@ -53,7 +55,7 @@ const CreateArticleDialog = ({ parentId, open, handleClose }) => {
       .then(
         ({
           data: {
-            createArticle: { id, title }
+            createdArticle: { id, title }
           }
         }) => {
           if (id) {
@@ -77,7 +79,7 @@ const CreateArticleDialog = ({ parentId, open, handleClose }) => {
       >
         {({ values: { title }, errors, touched, handleBlur, handleChange }) => (
           <StyledForm noValidate>
-            <StyledDialogContent>
+            <DialogContent className={classes.dialogContent}>
               <Field
                 id="title"
                 label="Add a title"
@@ -91,15 +93,16 @@ const CreateArticleDialog = ({ parentId, open, handleClose }) => {
                 autoFocus
                 fullWidth
               />
-              <StyledButton
+              <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 color="primary"
+                className={classes.button}
               >
                 Submit
-              </StyledButton>
-            </StyledDialogContent>
+              </Button>
+            </DialogContent>
           </StyledForm>
         )}
       </Formik>

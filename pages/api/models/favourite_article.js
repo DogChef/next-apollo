@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
   const FavouriteArticle = sequelize.define(
-    "favouriteArticle",
+    "favourite_article",
     {
       id: {
         type: DataTypes.INTEGER,

@@ -10,13 +10,13 @@ import {
   Button,
   Grid,
   Link as MLink,
+  makeStyles,
   styled as matStyled,
   TextField,
-  Typography,
-  useTheme
+  Typography
 } from "@material-ui/core";
 
-import { CREATE_USER } from "./core/users";
+import { CREATE_USER } from "./core/mutations";
 
 const signupSchema = Yup.object().shape({
   fname: Yup.string()
@@ -32,27 +32,29 @@ const signupSchema = Yup.object().shape({
     .oneOf([Yup.ref("password")], "Password does not match")
 });
 
-const SignUp = ({ changeComponent }) => {
-  const theme = useTheme();
-  const [signUpUser, { data }] = useMutation(CREATE_USER);
-
-  const StyledButton = matStyled(Button)({
+const useStyles = makeStyles(theme => ({
+  button: {
     margin: theme.spacing(3, 0, 2)
-  });
+  },
 
-  const NoPaddingGrid = matStyled(Grid)({
+  grid: {
     padding: `${theme.spacing(0, 1)} !important`
-  });
+  },
 
-  const StyledForm = matStyled(Form)({
+  form: {
     width: "100%",
     marginTop: theme.spacing(1)
-  });
+  }
+}));
+
+const SignUp = ({ changeComponent }) => {
+  const [signUpUser, { data }] = useMutation(CREATE_USER);
+  const classes = useStyles();
 
   const submition = (values, { setErrors }) => {
     signUpUser({
       variables: {
-        name: values.fname,
+        username: values.fname,
         email: values.email,
         password: values.password
       }
@@ -60,7 +62,7 @@ const SignUp = ({ changeComponent }) => {
       .then(
         ({
           data: {
-            signUpUser: { id }
+            signedUser: { id }
           }
         }) => {
           if (id) {
@@ -105,9 +107,9 @@ const SignUp = ({ changeComponent }) => {
           handleBlur,
           handleChange
         }) => (
-          <StyledForm noValidate>
+          <Form noValidate className={classes.form}>
             <Grid container spacing={2}>
-              <NoPaddingGrid item xs={12}>
+              <Grid className={classes.grid} item xs={12}>
                 <Field
                   id="fname"
                   label="Name"
@@ -123,8 +125,8 @@ const SignUp = ({ changeComponent }) => {
                   autoFocus
                   fullWidth
                 />
-              </NoPaddingGrid>
-              <NoPaddingGrid item xs={12}>
+              </Grid>
+              <Grid className={classes.grid} item xs={12}>
                 <Field
                   id="email"
                   type="email"
@@ -142,8 +144,8 @@ const SignUp = ({ changeComponent }) => {
                   fullWidth
                   required
                 />
-              </NoPaddingGrid>
-              <NoPaddingGrid item xs={12} sm={6}>
+              </Grid>
+              <Grid className={classes.grid} item xs={12} sm={6}>
                 <Field
                   id="password"
                   type="password"
@@ -161,8 +163,8 @@ const SignUp = ({ changeComponent }) => {
                   fullWidth
                   required
                 />
-              </NoPaddingGrid>
-              <NoPaddingGrid item xs={12} sm={6}>
+              </Grid>
+              <Grid className={classes.grid} item xs={12} sm={6}>
                 <Field
                   id="passwordConfirmation"
                   type="password"
@@ -185,16 +187,17 @@ const SignUp = ({ changeComponent }) => {
                   fullWidth
                   required
                 />
-              </NoPaddingGrid>
+              </Grid>
             </Grid>
-            <StyledButton
+            <Button
               type="submit"
               fullWidth
               variant="contained"
               color="primary"
+              className={classes.button}
             >
               Submit
-            </StyledButton>
+            </Button>
             <Grid container justify="flex-end">
               <Grid item>
                 <MLink
@@ -206,7 +209,7 @@ const SignUp = ({ changeComponent }) => {
                 </MLink>
               </Grid>
             </Grid>
-          </StyledForm>
+          </Form>
         )}
       </Formik>
     </>

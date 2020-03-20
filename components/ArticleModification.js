@@ -5,8 +5,8 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  makeStyles,
   styled as matStyled,
-  useTheme,
   Typography
 } from "@material-ui/core";
 import {
@@ -18,34 +18,36 @@ import {
   FormatAlignJustify as BodyIcon
 } from "@material-ui/icons";
 
-const ArticleModification = ({ authorTime, author, title, body, rootPath }) => {
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(!!rootPath);
+const StyledListItemIcon = matStyled(ListItemIcon)({
+  minWidth: "40px"
+});
 
-  const StyledListItem = matStyled(ListItem)({
+const StyledBox = matStyled(Box)({
+  width: "100%"
+});
+
+const StyledIcon = matStyled(ListItemIcon)({
+  minWidth: 0,
+  paddingRight: "3px"
+});
+
+const useStyles = makeStyles(theme => ({
+  listItem: {
     paddingLeft: theme.spacing(2)
-  });
+  },
 
-  const StyledSubListItem = matStyled(ListItem)({
+  subListItem: {
     paddingLeft: theme.spacing(4)
-  });
+  }
+}));
 
-  const StyledListItemIcon = matStyled(ListItemIcon)({
-    minWidth: "40px"
-  });
-
-  const StyledBox = matStyled(Box)({
-    width: "100%"
-  });
-
-  const StyledIcon = matStyled(ListItemIcon)({
-    minWidth: 0,
-    paddingRight: "3px"
-  });
+const ArticleModification = ({ authorTime, author, title, body, rootPath }) => {
+  const [open, setOpen] = React.useState(!!rootPath);
+  const classes = useStyles();
 
   return (
     <>
-      <StyledListItem>
+      <ListItem className={classes.listItem}>
         <StyledListItemIcon>
           <EditIcon />
         </StyledListItemIcon>
@@ -53,26 +55,26 @@ const ArticleModification = ({ authorTime, author, title, body, rootPath }) => {
         <StyledListItemIcon onClick={() => setOpen(!open)}>
           {open ? <ShowLessIcon /> : <ShowMoreIcon />}
         </StyledListItemIcon>
-      </StyledListItem>
+      </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
-        <StyledSubListItem>
+        <ListItem className={classes.subListItem}>
           <StyledListItemIcon>
             <AuthorIcon />
           </StyledListItemIcon>
           <ListItemText primary={`Author: ${author.name}`} />
-        </StyledSubListItem>
-        <StyledSubListItem>
+        </ListItem>
+        <ListItem className={classes.subListItem}>
           <StyledListItemIcon>
             <TitleIcon />
           </StyledListItemIcon>
           <ListItemText primary={`Title: ${title}`} />
-        </StyledSubListItem>
-        <StyledSubListItem>
+        </ListItem>
+        <ListItem className={classes.subListItem}>
           <StyledListItemIcon>
             <BodyIcon />
           </StyledListItemIcon>
           <StyledBox dangerouslySetInnerHTML={{ __html: body }} />
-        </StyledSubListItem>
+        </ListItem>
       </Collapse>
     </>
   );
